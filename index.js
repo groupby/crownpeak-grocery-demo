@@ -11,7 +11,7 @@ const currentDemo = 'grocery-demo';
 const {Storage} = require('@google-cloud/storage');
 var env = 'live';
 
-const storage = new Storage('groupby-demos','/home/daniel_peltier/cms-environments/demos/grocery-demo/groupby-demos-7cf5728e0044.json');
+const storage = new Storage('groupby-demos','/home/daniel_peltier/cms-environments/demos/crownpeak-grocery-demo/groupby-demos-7cf5728e0044.json');
 const bucketName = 'cms_hosting';
 
 async function get404() {
