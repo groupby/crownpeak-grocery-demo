@@ -119,14 +119,9 @@ app.get('/*', async (req, res) => {
       feed.on('data', async function(d) {
         buf += d;
       }).on('end', async function() {
-        let formattedPage = buf.replace(/\/dev\//g,'\/').replace(/\/live\//g,'\/').replace(/\/Global Assets\//g,'\/global-assets\/').replace(/\/Global%20Assets\//g,'\/global-assets\/');
-        let completedPg = formattedPage;
-        try {
-          completedPg = await addHeaderFooter(formattedPage);
-        } catch(error) {
-          console.log('error getting header/footer');
-        }
-        res.send(completedPg);
+        let regex = new RegExp('/grocery-demo/','g');
+        let formattedPage = buf.replace(/\/dev\//g,'\/').replace(/\/live\//g,'\/').replace(regex,'/');
+        res.send(formattedPage);
       })
     }
   });
