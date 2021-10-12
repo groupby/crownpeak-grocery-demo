@@ -1,0 +1,2 @@
+service: groupby-demo-grocery
+runtime: nodejs12
