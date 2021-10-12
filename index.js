@@ -4,6 +4,8 @@ const port = 8080;
 const fs = require('fs');
 var favicon = require('serve-favicon');
 
+require('dotenv').config();
+
 const currentDemo = 'grocery-demo';
 
 // app.use(favicon(__dirname + '/favicon.ico'));
@@ -146,7 +148,7 @@ app.get('/*', async (req, res) => {
       }).on('end', async function() {
         let regex = new RegExp('/' + currentDemo + '/','g');
         let formattedPage = buf.replace(/\/dev\//g,'\/').replace(/\/live\//g,'\/').replace(regex,'/');
-        res.send(formattedPage);
+        res.send(formattedPage + '<!-- ' + process.env.GOOGLE_STORAGE + ' -->');
       })
     }
   });
