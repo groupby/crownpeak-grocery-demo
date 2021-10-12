@@ -37,17 +37,17 @@ async function get404() {
 }
 
 app.get('/assets/*', function(req, res) {
-  if(req.get('host').indexOf('groupbyinc.com') == -1) {
+  if(req.get('host').indexOf('groupby.cloud') == -1) {
     env = 'dev';
   }
 
   const bucket = storage.bucket(bucketName);
   let urlPath = req.url.split('/');
-  const file = bucket.file('demos-5fg5Xq2wWTzhrKKu/' + env + '/' + currentDemo + '/' + req.url.split('?')[0]);
+  const file = bucket.file('demos-5fg5Xq2wWTzhrKKu/' + env + '/' + currentDemo + req.url.split('?')[0]);
 
   file.exists(function(err,exists) {
     if(!exists) {
-      res.send(req.url.split('?')[0]);
+      res.send('error 404');
     }
     else {
       let parts = req.url.split('.');
@@ -111,7 +111,7 @@ app.get('/*', async (req, res) => {
 
   file.exists(function(err,exists) {
     if(!exists) {
-      res.send('error 404.');
+      res.send('error 404');
     }
     else {
       let feed = file.createReadStream();
