@@ -121,7 +121,7 @@ app.get('/recipes-index.json', (req, res) => {
       feed.on('data', function(d) {
         buf += d;
       }).on('end', function() {
-        res.json(buf);
+        res.send(buf);
       })
     }
   });
