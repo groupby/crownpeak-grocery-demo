@@ -107,7 +107,7 @@ app.get('/*', async (req, res) => {
     env = 'dev';
   }
   const bucket = storage.bucket(bucketName);
-  const file = bucket.file('groupbyinc-aua2LpqLwbWBL5AQ/' + env + '/' + currentDemo + '/homepage.html');
+  const file = bucket.file('demos-5fg5Xq2wWTzhrKKu/' + env + '/' + currentDemo + '/homepage.html');
 
   file.exists(function(err,exists) {
     if(!exists) {
