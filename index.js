@@ -102,6 +102,31 @@ app.get('/live/' + currentDemo + '/*', (req, res) => {
   res.redirect(req.url.replace('/live',''));
 });
 
+app.get('/recipes-index.json' + currentDemo + '/*', (req, res) => {
+  if(req.get('host').indexOf('groupby.cloud') == -1) {
+    env = 'dev';
+  }
+
+  const bucket = storage.bucket(bucketName);
+  let urlPath = req.url.split('/');
+  const file = bucket.file('demos-5fg5Xq2wWTzhrKKu/' + env + '/' + currentDemo + req.url.split('?')[0]);
+
+  file.exists(function(err,exists) {
+    if(!exists) {
+      res.send('error 404');
+    }
+    else {
+      let feed = file.createReadStream();
+      var buf = '';
+      feed.on('data', function(d) {
+        buf += d;
+      }).on('end', function() {
+        res.json(buf);
+      })
+    }
+  });
+});
+
 app.get('/*', async (req, res) => {
   if(req.get('host').indexOf('groupby.cloud') == -1) {
     env = 'dev';
