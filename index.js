@@ -102,7 +102,7 @@ app.get('/live/' + currentDemo + '/*', (req, res) => {
   res.redirect(req.url.replace('/live',''));
 });
 
-app.get('/recipes-index.json' + currentDemo + '/*', (req, res) => {
+app.get('/recipes-index.json', (req, res) => {
   if(req.get('host').indexOf('groupby.cloud') == -1) {
     env = 'dev';
   }
