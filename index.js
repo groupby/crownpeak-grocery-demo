@@ -47,7 +47,7 @@ app.get('/assets/*', function(req, res) {
 
   file.exists(function(err,exists) {
     if(!exists) {
-      res.send('error 404');
+      res.send(req.url.split('?')[0]);
     }
     else {
       let parts = req.url.split('.');
@@ -111,7 +111,7 @@ app.get('/*', async (req, res) => {
 
   file.exists(function(err,exists) {
     if(!exists) {
-      res.send('error 404');
+      res.send('error 404.');
     }
     else {
       let feed = file.createReadStream();
@@ -119,7 +119,7 @@ app.get('/*', async (req, res) => {
       feed.on('data', async function(d) {
         buf += d;
       }).on('end', async function() {
-        let regex = new RegExp('/grocery-demo/','g');
+        let regex = new RegExp('/' + currentDemo + '/','g');
         let formattedPage = buf.replace(/\/dev\//g,'\/').replace(/\/live\//g,'\/').replace(regex,'/');
         res.send(formattedPage);
       })
