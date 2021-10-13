@@ -13,7 +13,7 @@ const currentDemo = 'grocery-demo';
 const {Storage} = require('@google-cloud/storage');
 var env = 'live';
 
-const storage = new Storage('groupby-demos','/home/daniel_peltier/cms-environments/demos/crownpeak-grocery-demo/groupby-demos-7cf5728e0044.json');
+const storage = new Storage('groupby-demos',process.env.GOOGLE_STORAGE);
 const bucketName = 'cms_hosting';
 
 async function get404() {
@@ -148,7 +148,7 @@ app.get('/*', async (req, res) => {
       }).on('end', async function() {
         let regex = new RegExp('/' + currentDemo + '/','g');
         let formattedPage = buf.replace(/\/dev\//g,'\/').replace(/\/live\//g,'\/').replace(regex,'/');
-        res.send(formattedPage + '<!-- ' + process.env.GOOGLE_STORAGE + ' -->');
+        res.send(formattedPage);
       })
     }
   });
