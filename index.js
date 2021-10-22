@@ -130,28 +130,29 @@ app.get('/recipes-index.json', (req, res) => {
 });
 
 app.get('/*', async (req, res) => {
-  if(req.get('host').indexOf('groupby.cloud') == -1) {
-    env = 'dev';
-  }
-  const bucket = storage.bucket(bucketName);
-  const file = bucket.file('demos-5fg5Xq2wWTzhrKKu/' + env + '/' + currentDemo + '/homepage.html');
-
-  file.exists(function(err,exists) {
-    if(!exists) {
-      res.send('error 404');
-    }
-    else {
-      let feed = file.createReadStream();
-      var buf = '';
-      feed.on('data', async function(d) {
-        buf += d;
-      }).on('end', async function() {
-        let regex = new RegExp('/' + currentDemo + '/','g');
-        let formattedPage = buf.replace(/\/dev\//g,'\/').replace(/\/live\//g,'\/').replace(regex,'/');
-        res.send(formattedPage);
-      })
-    }
-  });
+  // if(req.get('host').indexOf('groupby.cloud') == -1) {
+  //   env = 'dev';
+  // }
+  // const bucket = storage.bucket(bucketName);
+  // const file = bucket.file('demos-5fg5Xq2wWTzhrKKu/' + env + '/' + currentDemo + '/homepage.html');
+  //
+  // file.exists(function(err,exists) {
+  //   if(!exists) {
+  //     res.send('error 404');
+  //   }
+  //   else {
+  //     let feed = file.createReadStream();
+  //     var buf = '';
+  //     feed.on('data', async function(d) {
+  //       buf += d;
+  //     }).on('end', async function() {
+  //       let regex = new RegExp('/' + currentDemo + '/','g');
+  //       let formattedPage = buf.replace(/\/dev\//g,'\/').replace(/\/live\//g,'\/').replace(regex,'/');
+  //       res.send(formattedPage);
+  //     })
+  //   }
+  // });
+  res.send('testing...');
 });
 
 app.listen(port, () => {
