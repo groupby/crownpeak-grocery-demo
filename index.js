@@ -14,7 +14,7 @@ const {Storage} = require('@google-cloud/storage');
 var env = 'live';
 
 const storage = new Storage('groupby-demos',process.env.GOOGLE_STORAGE);
-const bucketName = 'cms_hosting';
+const bucketName = 'demos_content';
 
 async function get404() {
   const bucket = storage.bucket(bucketName);
