@@ -38,6 +38,29 @@ async function get404() {
   });
 }
 
+app.post('/search-api*', async (req, res) => {
+  /*
+    curl --request POST \
+      --url https://search.demos.groupbycloud.com/api/search \
+      --header 'Authorization: client-key c4122126-ff9d-452b-ae12-ff31cc950070' \
+      --header 'Content-Type: application/json' \
+      --header 'X-Groupby-Customer-Id: demos' \
+      --data '{
+        "collection": "groceryProd",
+    	   "area": "Grocery",
+    	  "query":"ketchup",
+        "skip": "0",
+        "pageSize": 24,
+    	  "dynamicFacet": false,
+    		"pageCategories": [
+    		"yanishTest"
+    	],
+    	"debug": false
+    }'
+  */
+  
+});
+
 app.get('/assets/*', function(req, res) {
   if(req.get('host').indexOf('groupby.cloud') == -1) {
     env = 'dev';
