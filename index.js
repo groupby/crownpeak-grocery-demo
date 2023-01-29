@@ -3,8 +3,14 @@ const app = express();
 const port = 8080;
 const fs = require('fs');
 var favicon = require('serve-favicon');
+const axios = require('axios');
+var bodyParser = require('body-parser');
+var cors = require('cors');
 
 require('dotenv').config();
+
+app.use(cors());
+app.use(bodyParser.json());
 
 const currentDemo = 'grocery-demo';
 
@@ -38,27 +44,31 @@ async function get404() {
   });
 }
 
+app.post('/pdp-api*', async function(req, res) {
+  let options = {
+    headers: {
+      'Authorization': 'client-key ' + process.env.CLIENT_KEY,
+      'Content-Type': 'application/json',
+      'X-Groupby-Customer-Id': 'demos',
+      'skip-cache': 'true'
+    }
+  };
+  let pdp = await axios.get('https://search.demos.groupbycloud.com/api/search/product?collection=groceryProd&productId=' + req.body.id, options);
+  res.json(pdp.data);
+});
+
 app.post('/search-api*', async (req, res) => {
-  /*
-    curl --request POST \
-      --url https://search.demos.groupbycloud.com/api/search \
-      --header 'Authorization: client-key c4122126-ff9d-452b-ae12-ff31cc950070' \
-      --header 'Content-Type: application/json' \
-      --header 'X-Groupby-Customer-Id: demos' \
-      --data '{
-        "collection": "groceryProd",
-    	   "area": "Grocery",
-    	  "query":"ketchup",
-        "skip": "0",
-        "pageSize": 24,
-    	  "dynamicFacet": false,
-    		"pageCategories": [
-    		"yanishTest"
-    	],
-    	"debug": false
-    }'
-  */
-  
+  let options = {
+    headers: {
+      'Authorization': 'client-key ' + process.env.CLIENT_KEY,
+      'Content-Type': 'application/json',
+      'X-Groupby-Customer-Id': 'demos',
+      'skip-cache': 'true',
+      'Access-Control-Allow-Origin' : '*'
+    }
+  };
+  let search = await axios.post('https://search.demos.groupbycloud.com/api/search', req.body, options);
+  res.json(search.data);
 });
 
 app.get('/assets/*', function(req, res) {
@@ -66,16 +76,18 @@ app.get('/assets/*', function(req, res) {
     env = 'dev';
   }
 
+  let filePath = req.url.replace('main','pantry');
+
   const bucket = storage.bucket(bucketName);
-  let urlPath = req.url.split('/');
-  const file = bucket.file('demos-5fg5Xq2wWTzhrKKu/' + env + '/' + currentDemo + req.url.split('?')[0]);
+  let urlPath = filePath.split('/');
+  const file = bucket.file('demos-5fg5Xq2wWTzhrKKu/' + env + '/' + currentDemo + filePath.split('?')[0]);
 
   file.exists(function(err,exists) {
     if(!exists) {
       res.send('error 404');
     }
     else {
-      let parts = req.url.split('.');
+      let parts = filePath.split('.');
       let ext = '';
       if(parts.length > 1) {
         ext = parts[1].split('?')[0];
