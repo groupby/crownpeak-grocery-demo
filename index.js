@@ -58,17 +58,18 @@ app.post('/pdp-api*', async function(req, res) {
 });
 
 app.post('/search-api*', async (req, res) => {
-  let options = {
-    headers: {
-      'Authorization': 'client-key ' + process.env.CLIENT_KEY,
-      'Content-Type': 'application/json',
-      'X-Groupby-Customer-Id': 'demos',
-      'skip-cache': 'true',
-      'Access-Control-Allow-Origin' : '*'
-    }
-  };
-  let search = await axios.post('https://search.demos.groupbycloud.com/api/search', req.body, options);
-  res.json(search.data);
+  // let options = {
+  //   headers: {
+  //     'Authorization': 'client-key ' + process.env.CLIENT_KEY,
+  //     'Content-Type': 'application/json',
+  //     'X-Groupby-Customer-Id': 'demos',
+  //     'skip-cache': 'true',
+  //     'Access-Control-Allow-Origin' : '*'
+  //   }
+  // };
+  // let search = await axios.post('https://search.demos.groupbycloud.com/api/search', req.body, options);
+  // res.json(search.data);
+  res.json({'test': req.body});
 });
 
 app.get('/assets/*', function(req, res) {
