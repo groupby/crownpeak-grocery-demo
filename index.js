@@ -181,7 +181,7 @@ app.get('/*', async (req, res) => {
       feed.on('data', async function(d) {
         buf += d;
       }).on('end', async function() {
-        buf = buf.replace('tile-img|[{image}]','tile-img|[{images.0.uri}]')
+        buf = buf.replace('tile-img|[{image}]','tile-img|[{images.0.uri}]').replace('mini-cart-image|[{image}]','mini-cart-image|[{images.0.uri}]')
         let regex = new RegExp('/' + currentDemo + '/','g');
         let formattedPage = buf.replace(/\/dev\//g,'\/').replace(/\/live\//g,'\/').replace(regex,'/');
         res.send(formattedPage);
