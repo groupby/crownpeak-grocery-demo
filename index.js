@@ -71,6 +71,66 @@ app.post('/search-api*', async (req, res) => {
   res.json(search.data);
 });
 
+app.get('/grocery-demo/assets/*', function(req, res) {
+  if(req.get('host').indexOf('groupby.cloud') == -1) {
+    env = 'dev';
+  }
+
+  let filePath = req.url.replace('main','pantry');
+
+  const bucket = storage.bucket(bucketName);
+  let urlPath = filePath.split('/');
+  const file = bucket.file('demos-5fg5Xq2wWTzhrKKu/' + env + '/' + currentDemo + filePath.split('?')[0]);
+
+  file.exists(function(err,exists) {
+    if(!exists) {
+      res.send('error 404');
+    }
+    else {
+      let parts = filePath.split('.');
+      let ext = '';
+      if(parts.length > 1) {
+        ext = parts[1].split('?')[0];
+      }
+      // css, js
+      // json
+      if(ext == 'css' || ext == 'js') {
+        let feed = file.createReadStream();
+        var buf = '';
+        feed.on('data', function(d) {
+          buf += d;
+        }).on('end', function() {
+          if(ext == 'css') {
+            res.type('css');
+            // console.log('css file');
+          }
+          if(ext == 'js') {
+            res.type('js');
+            // console.log('js file');
+          }
+          res.send(buf);
+        })
+      }
+      else {
+        if(ext == 'json') {
+          let feed = file.createReadStream();
+          var buf = '';
+          feed.on('data', function(d) {
+            buf += d;
+          }).on('end', function() {
+            res.json(buf);
+          })
+        }
+        else {
+          const publicUrl = file.publicUrl();
+          res.redirect(publicUrl);
+        }
+      }
+    }
+  });
+
+});
+
 app.get('/assets/*', function(req, res) {
   if(req.get('host').indexOf('groupby.cloud') == -1) {
     env = 'dev';
