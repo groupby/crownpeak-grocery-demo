@@ -71,7 +71,7 @@ app.post('/search-api*', async (req, res) => {
   res.json(search.data);
 });
 
-app.get('/grocery-demo/assets/*', function(req, res) {
+app.get('/grocery-demo/grocery-demo/assets/*', function(req, res) {
   if(req.get('host').indexOf('groupby.cloud') == -1) {
     env = 'dev';
   }
