@@ -84,7 +84,7 @@ app.get('/grocery-demo/assets/*', function(req, res) {
 
   file.exists(function(err,exists) {
     if(!exists) {
-      res.send('error 404');
+      res.send('error 404 - ' + 'demos-5fg5Xq2wWTzhrKKu/' + env + '/' + currentDemo + filePath.split('?')[0]);
     }
     else {
       let parts = filePath.split('.');
@@ -144,7 +144,7 @@ app.get('/assets/*', function(req, res) {
 
   file.exists(function(err,exists) {
     if(!exists) {
-      res.send('error 404');
+      res.send('error 404 - ' + 'demos-5fg5Xq2wWTzhrKKu/' + env + '/' + currentDemo + filePath.split('?')[0]);
     }
     else {
       let parts = filePath.split('.');
@@ -210,7 +210,7 @@ app.get('/recipes-index.json', (req, res) => {
 
   file.exists(function(err,exists) {
     if(!exists) {
-      res.send('error 404');
+      res.send('error 404 - ' + 'demos-5fg5Xq2wWTzhrKKu/' + env + '/' + currentDemo + filePath.split('?')[0]);
     }
     else {
       let feed = file.createReadStream();
