@@ -6,6 +6,8 @@ var favicon = require('serve-favicon');
 const axios = require('axios');
 var bodyParser = require('body-parser');
 var cors = require('cors');
+var cookieParser = require('cookie-parser');
+app.use(cookieParser());
 
 require('dotenv').config();
 
@@ -67,6 +69,11 @@ app.post('/search-api*', async (req, res) => {
       'Access-Control-Allow-Origin' : '*'
     }
   };
+  
+  if(req.cookies && req.cookies['gbi_visitorId']) {
+    req.body.visitorId = req.cookies['gbi_visitorId'];
+  }
+
   let search = await axios.post('https://search.demos.groupbycloud.com/api/search', req.body, options);
   res.json(search.data);
 });
