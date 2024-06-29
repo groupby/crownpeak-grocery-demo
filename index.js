@@ -62,13 +62,20 @@ app.post('/pdp-api*', async function(req, res) {
 
 app.post('/save-recipe-terms', async (req, res) => {
   if(req.body.recipeId && req.body.searchTerms) {
+    const bucket = storage.bucket(bucketName);
+    let newFilePath = 'demos-5fg5Xq2wWTzhrKKu/' + env + '/' + currentDemo + '/recipe-terms/' + req.body.recipeId + '.json';
     if(req.body.searchTerms.length == 0) {
       // delete file:
+      const deleteOptions = {
+        ifGenerationMatch: generationMatchPrecondition,
+      };
+      await bucket.file(newFilePath).delete(deleteOptions);
+      res.json({
+        success: 'deleted'
+      })
     }
     else {
       // save file:
-      let newFilePath = 'demos-5fg5Xq2wWTzhrKKu/' + env + '/' + currentDemo + '/recipe-terms/' + req.body.recipeId + '.json';
-      const bucket = storage.bucket(bucketName);
       const file = bucket.file(newFilePath);
       if(file) {
         const readableStream = new Readable();
