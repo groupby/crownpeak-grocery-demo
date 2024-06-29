@@ -69,7 +69,7 @@ app.post('/search-api*', async (req, res) => {
       'Access-Control-Allow-Origin' : '*'
     }
   };
-  
+
   if(req.cookies && req.cookies['gbi_visitorId']) {
     req.body.visitorId = req.cookies['gbi_visitorId'];
   }
@@ -250,8 +250,34 @@ app.get('/*', async (req, res) => {
       }).on('end', async function() {
         buf = buf.replace('tile-img|[{image}]','tile-img|[{images.0.uri}]').replace('mini-cart-image|[{image}]','mini-cart-image|[{images.0.uri}]').replace('mini-cart-price|{price}','mini-cart-price|{priceInfo.price}').replace('product-card-price|{price,2}','product-card-price|{priceInfo.price,2}')
         let regex = new RegExp('/' + currentDemo + '/','g');
-        let formattedPage = buf.replace(/\/dev\//g,'\/').replace(/\/live\//g,'\/').replace(regex,'/');
-        res.send(formattedPage);
+        var formattedPage = buf.replace(/\/dev\//g,'\/').replace(/\/live\//g,'\/').replace(regex,'/');
+
+        if(req.url.indexOf('/recipe/') != -1) {
+          let recUrlParts = req.url.split('/');
+          if(recUrlParts.length > 2) {
+            let recipeId = recUrlParts[recUrlParts.length - 2];
+            const file2 = bucket.file('demos-5fg5Xq2wWTzhrKKu/' + env + '/' + currentDemo + '/recipe-terms/' + recipeId + '.json');
+            file2.exists(function(err,exists2) {
+              if(!exists2) {
+                res.send(formattedPage);
+              }
+              else {
+                let feed2 = file2.createReadStream();
+                var buf2 = '';
+                feed2.on('data', async function(d) {
+                  buf2 += d;
+                }).on('end', async function() {
+                  formattedPage = formattedPage.replace('<body>',('<body><div class="invisible recipe-search-terms">' + buf2 + '</div>'));
+                  res.send(formattedPage);
+                });
+              }
+            });
+          }
+
+        }
+        else {
+          res.send(formattedPage);
+        }
       })
     }
   });
