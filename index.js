@@ -68,6 +68,7 @@ app.post('/save-recipe-terms', async (req, res) => {
     else {
       // save file:
       let newFilePath = 'demos-5fg5Xq2wWTzhrKKu/' + env + '/' + currentDemo + '/recipe-terms/' + req.body.recipeId + '.json';
+      const bucket = storage.bucket(bucketName);
       const file = bucket.file(newFilePath);
       if(file) {
         const readableStream = new Readable();
