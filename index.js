@@ -66,10 +66,7 @@ app.post('/save-recipe-terms', async (req, res) => {
     let newFilePath = 'demos-5fg5Xq2wWTzhrKKu/' + env + '/' + currentDemo + '/recipe-terms/' + req.body.recipeId + '.json';
     if(req.body.searchTerms.length == 0) {
       // delete file:
-      const deleteOptions = {
-        ifGenerationMatch: generationMatchPrecondition,
-      };
-      await bucket.file(newFilePath).delete(deleteOptions);
+      await bucket.file(newFilePath).delete();
       res.json({
         success: 'deleted'
       })
