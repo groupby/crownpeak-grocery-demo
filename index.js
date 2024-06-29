@@ -8,6 +8,7 @@ var bodyParser = require('body-parser');
 var cors = require('cors');
 var cookieParser = require('cookie-parser');
 app.use(cookieParser());
+const Readable = require('stream').Readable;
 
 require('dotenv').config();
 
@@ -57,6 +58,51 @@ app.post('/pdp-api*', async function(req, res) {
   };
   let pdp = await axios.get('https://search.demos.groupbycloud.com/api/search/product?collection=groceryProd&productId=' + req.body.id, options);
   res.json(pdp.data);
+});
+
+app.post('/save-recipe-terms', async (req, res) => {
+  if(req.body.recipeId && req.body.searchTerms) {
+    if(req.body.searchTerms.length == 0) {
+      // delete file:
+    }
+    else {
+      // save file:
+      let newFilePath = 'demos-5fg5Xq2wWTzhrKKu/' + env + '/' + currentDemo + '/recipe-terms/' + req.body.recipeId + '.json';
+      const file = bucket.file(newFilePath);
+      if(file) {
+        const readableStream = new Readable();
+        readableStream.push(JSON.stringify(req.body.searchTerms));
+        readableStream.push(null);
+        let gcFile = bucket.file(newFilePath);
+        readableStream.pipe(gcFile.createWriteStream({
+          resumable: false,
+          validation: false,
+          contentType: 'application/json'
+        }))
+        .on('error', (error) => {
+          res.json({
+            "error": "failed to save to bucket: " + error
+          });
+        })
+        .on('finish', async () => {
+          res.json({
+            success: req.body.recipeId
+          });
+        });
+      }
+      else {
+        res.json({
+          "error": "Unable to create file"
+        });
+      }
+
+    }
+  }
+  else {
+    res.json({
+      error: 'invalid payload'
+    })
+  }
 });
 
 app.post('/search-api*', async (req, res) => {
