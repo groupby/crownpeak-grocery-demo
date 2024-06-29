@@ -267,7 +267,7 @@ app.get('/*', async (req, res) => {
                 feed2.on('data', async function(d) {
                   buf2 += d;
                 }).on('end', async function() {
-                  formattedPage = formattedPage.replace('<body>',('<body><div class="invisible recipe-search-terms">' + buf2 + '</div>'));
+                  formattedPage = formattedPage.replace('<header>',('<div class="invisible recipe-search-terms">' + buf2 + '</div></header>'));
                   res.send(formattedPage);
                 });
               }
