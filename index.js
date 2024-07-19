@@ -240,8 +240,50 @@ app.get('/assets/*', function(req, res) {
           })
         }
         else {
-          const publicUrl = file.publicUrl();
-          res.redirect(publicUrl);
+          if(ext == 'png') {
+            let filePath = req.url.split('/');
+            file.getMetadata().then(function(data) {
+              res.writeHead(200, {
+                  "Content-Type": "image/png",
+                  "Content-Disposition": "attachment; filename=" + filePath[filePath.length - 1],
+                  "Content-Length": data[0].size,
+                  "Content-Transfer-Encoding": "binary"
+              });
+              file.createReadStream({ encoding: null }).pipe(res);
+            });
+          }
+          else {
+            if(ext == 'gltf') {
+              let filePath = req.url.split('/');
+              file.getMetadata().then(function(data) {
+                res.writeHead(200, {
+                    "Content-Type": "model/gltf+json",
+                    "Content-Disposition": "attachment; filename=" + filePath[filePath.length - 1],
+                    "Content-Length": data[0].size,
+                    "Content-Transfer-Encoding": "binary"
+                });
+                file.createReadStream({ encoding: null }).pipe(res);
+              });
+            }
+            else {
+              if(ext == 'bin') {
+                let filePath = req.url.split('/');
+                file.getMetadata().then(function(data) {
+                  res.writeHead(200, {
+                      "Content-Type": "application/octet-stream",
+                      "Content-Disposition": "attachment; filename=" + filePath[filePath.length - 1],
+                      "Content-Length": data[0].size,
+                      "Content-Transfer-Encoding": "binary"
+                  });
+                  file.createReadStream({ encoding: null }).pipe(res);
+                });
+              }
+              else {
+                const publicUrl = file.publicUrl();
+                res.redirect(publicUrl);
+              }
+            }
+          }
         }
       }
     }
