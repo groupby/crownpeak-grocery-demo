@@ -245,7 +245,7 @@ app.get('/assets/*', function(req, res) {
             file.getMetadata().then(function(data) {
               res.writeHead(200, {
                   "Content-Type": "image/png",
-                  "Content-Disposition": "attachment; filename=" + filePath[filePath.length - 1],
+                  "Content-Disposition": "inline; filename=" + filePath[filePath.length - 1],
                   "Content-Length": data[0].size,
                   "Content-Transfer-Encoding": "binary"
               });
@@ -271,7 +271,7 @@ app.get('/assets/*', function(req, res) {
                 file.getMetadata().then(function(data) {
                   res.writeHead(200, {
                       "Content-Type": "application/octet-stream",
-                      "Content-Disposition": "attachment; filename=" + filePath[filePath.length - 1],
+                      "Content-Disposition": "inline; filename=" + filePath[filePath.length - 1],
                       "Content-Length": data[0].size,
                       "Content-Transfer-Encoding": "binary"
                   });
