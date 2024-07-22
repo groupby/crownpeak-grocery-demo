@@ -256,6 +256,7 @@ app.get('/assets/*', function(req, res) {
             if(ext == 'glb') {
               try {
                 const data = await fs.readFile('./objects/3d-store.glb');
+                console.log('data', data);
                 res.writeHead(200, {
                     "Content-Type": "image/png",
                     "Content-Disposition": "inline; filename=" + filePath[filePath.length - 1],
@@ -264,36 +265,43 @@ app.get('/assets/*', function(req, res) {
                 });
                 res.end(data);
               } catch(e) {
-                file.download({
-                  destination: './objects/3d-store.glb'
-                }, async function(err, c) {
-                  if(err) {
-                    res.json({
-                      details: 'cannot download',
-                      error: err
-                    })
-                  }
-                  else {
-                    res.json({
-                      details: 'download worked',
-                      content: c
-                    })
-                    // try {
-                    //   const data = await fs.readFile('./objects/3d-store.glb');
-                    //   res.writeHead(200, {
-                    //       "Content-Type": "image/png",
-                    //       "Content-Disposition": "inline; filename=" + filePath[filePath.length - 1],
-                    //       "Content-Length": data.length,
-                    //       "Content-Transfer-Encoding": "binary"
-                    //   });
-                    //   res.end(data);
-                    // } catch(e) {
-                    //   res.json({
-                    //     error: "no file"
-                    //   });
-                    // }
-                  }
-                });
+                try {
+                  file.download({
+                    destination: './objects/3d-store.glb'
+                  }, async function(err, c) {
+                    if(err) {
+                      res.json({
+                        details: 'cannot download',
+                        error: err
+                      })
+                    }
+                    else {
+                      res.json({
+                        details: 'download worked',
+                        content: c
+                      })
+                      // try {
+                      //   const data = await fs.readFile('./objects/3d-store.glb');
+                      //   res.writeHead(200, {
+                      //       "Content-Type": "image/png",
+                      //       "Content-Disposition": "inline; filename=" + filePath[filePath.length - 1],
+                      //       "Content-Length": data.length,
+                      //       "Content-Transfer-Encoding": "binary"
+                      //   });
+                      //   res.end(data);
+                      // } catch(e) {
+                      //   res.json({
+                      //     error: "no file"
+                      //   });
+                      // }
+                    }
+                  });                  
+                } catch(e2) {
+                  res.json({
+                    details: 'cannot dl',
+                    error: e2
+                  });
+                }
               }
               // let filePath = req.url.split('/');
               // file.getMetadata().then(function(mdata) {
