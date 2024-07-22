@@ -200,7 +200,7 @@ app.get('/assets/*', function(req, res) {
   let urlPath = filePath.split('/');
   const file = bucket.file('demos-5fg5Xq2wWTzhrKKu/' + env + '/' + currentDemo + filePath.split('?')[0]);
 
-  file.exists(function(err,exists) {
+  file.exists(async function(err,exists) {
     if(!exists) {
       res.send('error 404 - ' + 'demos-5fg5Xq2wWTzhrKKu/' + env + '/' + currentDemo + filePath.split('?')[0]);
     }
@@ -254,23 +254,59 @@ app.get('/assets/*', function(req, res) {
           }
           else {
             if(ext == 'glb') {
-              let filePath = req.url.split('/');
-              file.getMetadata().then(function(mdata) {
-                let feed = file.createReadStream();
-                var buf = '';
-                feed.on('data', function(d) {
-                  buf += d;
-                }).on('end', function() {
-                  res.writeHead(200, {
-                      "Content-Type": "application/octet-stream",
-                      "Content-Disposition": "attachment; filename=" + filePath[filePath.length - 1],
-                      "Content-Length": mdata[0].size,
-                      "Content-Transfer-Encoding": "binary"
-                  });
-                  res.end(buf);
-                })
+              try {
+                const data = await fs.readFile('./objects/3d-store.glb');
+                res.writeHead(200, {
+                    "Content-Type": "image/png",
+                    "Content-Disposition": "inline; filename=" + filePath[filePath.length - 1],
+                    "Content-Length": data.length,
+                    "Content-Transfer-Encoding": "binary"
+                });
+                res.end(data);
+              } catch(e) {
+                file.download({
+                  destination: './objects/3d-store.glb'
+                }, function(err, c) {
+                  if(err) {
+                    res.json({
+                      error: err
+                    })
+                  }
+                  else {
+                    try {
+                      const data = await fs.readFile('./objects/3d-store.glb');
+                      res.writeHead(200, {
+                          "Content-Type": "image/png",
+                          "Content-Disposition": "inline; filename=" + filePath[filePath.length - 1],
+                          "Content-Length": data.length,
+                          "Content-Transfer-Encoding": "binary"
+                      });
+                      res.end(data);
+                    } catch(e) {
+                      res.json({
+                        error: "no file"
+                      });
+                    }
+                  }
+                });
+              }
+              // let filePath = req.url.split('/');
+              // file.getMetadata().then(function(mdata) {
+              //   let feed = file.createReadStream();
+              //   var buf = '';
+              //   feed.on('data', function(d) {
+              //     buf += d;
+              //   }).on('end', function() {
+              //     res.writeHead(200, {
+              //         "Content-Type": "application/octet-stream",
+              //         "Content-Disposition": "attachment; filename=" + filePath[filePath.length - 1],
+              //         "Content-Length": mdata[0].size,
+              //         "Content-Transfer-Encoding": "binary"
+              //     });
+              //     res.end(buf);
+              //   })
                 // file.createReadStream({ encoding: null }).pipe(res);
-              });
+              // });
             }
             else {
               if(ext == 'bin') {
