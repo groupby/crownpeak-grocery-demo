@@ -269,6 +269,7 @@ app.get('/assets/*', function(req, res) {
                 }, async function(err, c) {
                   if(err) {
                     res.json({
+                      details: 'cannot download',
                       error: err
                     })
                   }
