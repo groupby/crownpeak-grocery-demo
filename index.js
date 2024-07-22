@@ -257,7 +257,7 @@ app.get('/assets/*', function(req, res) {
               let filePath = req.url.split('/');
               file.getMetadata().then(function(data) {
                 res.writeHead(200, {
-                    "Content-Type": "model/gltf+json",
+                    "Content-Type": "application/octet-stream",
                     "Content-Disposition": "attachment; filename=" + filePath[filePath.length - 1],
                     "Content-Length": data[0].size,
                     "Content-Transfer-Encoding": "binary"
