@@ -274,20 +274,24 @@ app.get('/assets/*', function(req, res) {
                     })
                   }
                   else {
-                    try {
-                      const data = await fs.readFile('./objects/3d-store.glb');
-                      res.writeHead(200, {
-                          "Content-Type": "image/png",
-                          "Content-Disposition": "inline; filename=" + filePath[filePath.length - 1],
-                          "Content-Length": data.length,
-                          "Content-Transfer-Encoding": "binary"
-                      });
-                      res.end(data);
-                    } catch(e) {
-                      res.json({
-                        error: "no file"
-                      });
-                    }
+                    res.json({
+                      details: 'download worked',
+                      content: c
+                    })
+                    // try {
+                    //   const data = await fs.readFile('./objects/3d-store.glb');
+                    //   res.writeHead(200, {
+                    //       "Content-Type": "image/png",
+                    //       "Content-Disposition": "inline; filename=" + filePath[filePath.length - 1],
+                    //       "Content-Length": data.length,
+                    //       "Content-Transfer-Encoding": "binary"
+                    //   });
+                    //   res.end(data);
+                    // } catch(e) {
+                    //   res.json({
+                    //     error: "no file"
+                    //   });
+                    // }
                   }
                 });
               }
