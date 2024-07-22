@@ -266,7 +266,7 @@ app.get('/assets/*', function(req, res) {
               } catch(e) {
                 file.download({
                   destination: './objects/3d-store.glb'
-                }, function(err, c) {
+                }, async function(err, c) {
                   if(err) {
                     res.json({
                       error: err
