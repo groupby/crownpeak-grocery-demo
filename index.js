@@ -255,14 +255,21 @@ app.get('/assets/*', function(req, res) {
           else {
             if(ext == 'glb') {
               let filePath = req.url.split('/');
-              file.getMetadata().then(function(data) {
-                res.writeHead(200, {
-                    "Content-Type": "application/octet-stream",
-                    "Content-Disposition": "attachment; filename=" + filePath[filePath.length - 1],
-                    "Content-Length": data[0].size,
-                    "Content-Transfer-Encoding": "binary"
-                });
-                file.createReadStream({ encoding: null }).pipe(res);
+              file.getMetadata().then(function(mdata) {
+                let feed = file.createReadStream();
+                var buf = '';
+                feed.on('data', function(d) {
+                  buf += d;
+                }).on('end', function() {
+                  res.writeHead(200, {
+                      "Content-Type": "application/octet-stream",
+                      "Content-Disposition": "attachment; filename=" + filePath[filePath.length - 1],
+                      "Content-Length": mdata[0].size,
+                      "Content-Transfer-Encoding": "binary"
+                  });
+                  res.end(buf);
+                })
+                // file.createReadStream({ encoding: null }).pipe(res);
               });
             }
             else {
