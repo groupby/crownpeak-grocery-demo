@@ -253,7 +253,7 @@ app.get('/assets/*', function(req, res) {
             });
           }
           else {
-            if(ext == 'gltf') {
+            if(ext == 'glb') {
               let filePath = req.url.split('/');
               file.getMetadata().then(function(data) {
                 res.writeHead(200, {
