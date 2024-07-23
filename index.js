@@ -19,13 +19,11 @@ const currentDemo = 'grocery-demo';
 
 app.use(favicon(__dirname + '/favicon.png'));
 
-const {Storage, TransferManager} = require('@google-cloud/storage');
+const {Storage} = require('@google-cloud/storage');
 var env = 'live';
 
 const storage = new Storage('groupby-demos',process.env.GOOGLE_STORAGE);
 const bucketName = 'demos_content';
-
-const transferManager = new TransferManager(storage.bucket(bucketName));
 
 async function get404() {
   const bucket = storage.bucket(bucketName);
@@ -271,6 +269,7 @@ app.get('/assets/*', function(req, res) {
                 res.end(data);
               } catch(e) {
                 try {
+                  const transferManager = new TransferManager(bucket);
                   await transferManager.downloadFileInChunks(('demos-5fg5Xq2wWTzhrKKu/' + env + '/' + currentDemo + filePath.split('?')[0]), {
                     destination: glbPath,
                     chunkSizeBytes: 1024,
