@@ -253,21 +253,24 @@ app.get('/assets/*', function(req, res) {
             });
           }
           else {
+            var glbPath = '/tmp/3d-store.glb';
             if(ext == 'glb') {
               try {
-                const data = await fs.readFile('/tmp/3d-store.glb');
+                const data = await fs.readFile(glbPath);
                 console.log('data', data);
+                var stats = fs.statSync(glbPath);
+                var fileSizeInBytes = stats.size;
                 res.writeHead(200, {
                     "Content-Type": "image/png",
                     "Content-Disposition": "inline; filename=" + filePath[filePath.length - 1],
-                    "Content-Length": data.length,
+                    "Content-Length": fileSizeInBytes,
                     "Content-Transfer-Encoding": "binary"
                 });
                 res.end(data);
               } catch(e) {
                 try {
                   file.download({
-                    destination: '/tmp/3d-store.glb'
+                    destination: glbPath
                   }, async function(err, c) {
                     if(err) {
                       res.json({
@@ -276,24 +279,22 @@ app.get('/assets/*', function(req, res) {
                       })
                     }
                     else {
-                      res.json({
-                        details: 'download worked',
-                        content: c
-                      })
-                      // try {
-                      //   const data = await fs.readFile('./objects/3d-store.glb');
-                      //   res.writeHead(200, {
-                      //       "Content-Type": "image/png",
-                      //       "Content-Disposition": "inline; filename=" + filePath[filePath.length - 1],
-                      //       "Content-Length": data.length,
-                      //       "Content-Transfer-Encoding": "binary"
-                      //   });
-                      //   res.end(data);
-                      // } catch(e) {
-                      //   res.json({
-                      //     error: "no file"
-                      //   });
-                      // }
+                      try {
+                        const data = await fs.readFile(glbPath);
+                        var stats2 = fs.statSync(glbPath);
+                        var fileSizeInBytes2 = stats2.size;
+                        res.writeHead(200, {
+                            "Content-Type": "image/png",
+                            "Content-Disposition": "inline; filename=" + filePath[filePath.length - 1],
+                            "Content-Length": fileSizeInBytes2,
+                            "Content-Transfer-Encoding": "binary"
+                        });
+                        res.end(data);
+                      } catch(e) {
+                        res.json({
+                          error: "no file"
+                        });
+                      }
                     }
                   });
                 } catch(e2) {
