@@ -261,8 +261,8 @@ app.get('/assets/*', function(req, res) {
                 var stats = fs.statSync(glbPath);
                 var fileSizeInBytes = stats.size;
                 res.writeHead(200, {
-                    "Content-Type": "image/png",
-                    "Content-Disposition": "inline; filename=" + filePath[filePath.length - 1],
+                    "Content-Type": "application/octet-stream",
+                    "Content-Disposition": "inline; filename=3d-store.glb",
                     "Content-Length": fileSizeInBytes,
                     "Content-Transfer-Encoding": "binary"
                 });
@@ -279,13 +279,16 @@ app.get('/assets/*', function(req, res) {
                       })
                     }
                     else {
+                      // res.json({
+                      //   testing: 'reached here'
+                      // });
                       try {
                         const data = await fs.readFile(glbPath);
                         var stats2 = fs.statSync(glbPath);
                         var fileSizeInBytes2 = stats2.size;
                         res.writeHead(200, {
-                            "Content-Type": "image/png",
-                            "Content-Disposition": "inline; filename=" + filePath[filePath.length - 1],
+                            "Content-Type": "application/octet-stream",
+                            "Content-Disposition": "inline; filename=3d-store.glb",
                             "Content-Length": fileSizeInBytes2,
                             "Content-Transfer-Encoding": "binary"
                         });
