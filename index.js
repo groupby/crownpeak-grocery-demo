@@ -268,15 +268,15 @@ app.get('/assets/*', function(req, res) {
                 });
                 res.end(data);
               } catch(e) {
+                const transferManager = new TransferManager(bucket);
+                await transferManager.downloadFileInChunks(file, {
+                  destination: glbPath,
+                  chunkSizeBytes: 1024,
+                });
+                res.json({
+                  testing: 'reached here'
+                })
                 try {
-                  const transferManager = new TransferManager(bucket);
-                  await transferManager.downloadFileInChunks(('demos-5fg5Xq2wWTzhrKKu/' + env + '/' + currentDemo + filePath.split('?')[0]), {
-                    destination: glbPath,
-                    chunkSizeBytes: 1024,
-                  });
-                  res.json({
-                    testing: 'reached here'
-                  })
                   // file.download({
                   //   destination: glbPath
                   // }, async function(err, c) {
