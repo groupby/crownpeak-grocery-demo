@@ -271,7 +271,7 @@ app.get('/assets/*', function(req, res) {
 
                 var buf = '';
                 let lastEnd = 0;
-                for(let i = 0; i < 440; i ++) {
+                for(let i = 0; i < 420; i ++) {
                   let start = i*1024*1024;
                   let end = i*1024*1024 + 1024*1024 - 1;
                   lastEnd = end;
