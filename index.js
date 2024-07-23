@@ -283,13 +283,19 @@ app.get('/assets/*', function(req, res) {
                 feed.on('data', function(d) {
                   buf += d;
                 }).on('end', function() {
+                  await fs.writeFile(glbPath, buf);
+                  const data = await fs.readFile(glbPath);
+                  console.log('data', data);
+                  var stats = fs.statSync(glbPath);
+                  var fileSizeInBytes = stats.size;
                   res.writeHead(200, {
                       "Content-Type": "application/octet-stream",
                       "Content-Disposition": "inline; filename=3d-store.glb",
-                      "Content-Length": buf.length,
+                      "Content-Length": fileSizeInBytes,
                       "Content-Transfer-Encoding": "binary"
                   });
-                  res.end(buf);
+                  res.end(data);
+
                 })
 
                 // const data = await fs.readFile(glbPath);
