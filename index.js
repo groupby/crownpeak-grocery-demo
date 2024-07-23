@@ -255,7 +255,7 @@ app.get('/assets/*', function(req, res) {
           else {
             if(ext == 'glb') {
               try {
-                const data = await fs.readFile('./objects/3d-store.glb');
+                const data = await fs.readFile('./tmp/3d-store.glb');
                 console.log('data', data);
                 res.writeHead(200, {
                     "Content-Type": "image/png",
@@ -267,7 +267,7 @@ app.get('/assets/*', function(req, res) {
               } catch(e) {
                 try {
                   file.download({
-                    destination: './objects/3d-store.glb'
+                    destination: './tmp/3d-store.glb'
                   }, async function(err, c) {
                     if(err) {
                       res.json({
@@ -295,7 +295,7 @@ app.get('/assets/*', function(req, res) {
                       //   });
                       // }
                     }
-                  });                  
+                  });
                 } catch(e2) {
                   res.json({
                     details: 'cannot dl',
