@@ -189,7 +189,7 @@ app.get('/grocery-demo/grocery-demo/assets/*', function(req, res) {
 
 });
 
-async function getGlbChunk(start, end) {
+async function getGlbChunk(file, start, end) {
   return new Promise(async (resolve, reject) => {
     var buf = '';
     let feed = file.createReadStream({start: start, end: end});
@@ -275,7 +275,7 @@ app.get('/assets/*', function(req, res) {
                   let start = i*1024*1024;
                   let end = i*1024*1024 + 1024*1024 - 1;
                   lastEnd = end;
-                  buf += await getGlbChunk(start, end);
+                  buf += await getGlbChunk(file, start, end);
                 }
                 // get final chunk:
                 let feed = file.createReadStream({start: (lastEnd + 1)});
