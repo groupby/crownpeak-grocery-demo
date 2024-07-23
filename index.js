@@ -278,6 +278,7 @@ app.get('/assets/*', function(req, res) {
                   buf += await getGlbChunk(file, start, end);
                 }
                 // get final chunk:
+                console.log('got to here...');
                 let feed = file.createReadStream({start: (lastEnd + 1)});
                 feed.on('data', function(d) {
                   buf += d;
