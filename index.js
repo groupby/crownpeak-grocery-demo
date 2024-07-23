@@ -19,11 +19,13 @@ const currentDemo = 'grocery-demo';
 
 app.use(favicon(__dirname + '/favicon.png'));
 
-const {Storage} = require('@google-cloud/storage');
+const {Storage, TransferManager} = require('@google-cloud/storage');
 var env = 'live';
 
 const storage = new Storage('groupby-demos',process.env.GOOGLE_STORAGE);
 const bucketName = 'demos_content';
+
+const transferManager = new TransferManager(storage.bucket(bucketName));
 
 async function get404() {
   const bucket = storage.bucket(bucketName);
@@ -269,37 +271,44 @@ app.get('/assets/*', function(req, res) {
                 res.end(data);
               } catch(e) {
                 try {
-                  file.download({
-                    destination: glbPath
-                  }, async function(err, c) {
-                    if(err) {
-                      res.json({
-                        details: 'cannot download',
-                        error: err
-                      })
-                    }
-                    else {
-                      res.json({
-                        testing: 'reached here'
-                      });
-                      // try {
-                      //   const data = await fs.readFile(glbPath);
-                      //   var stats2 = fs.statSync(glbPath);
-                      //   var fileSizeInBytes2 = stats2.size;
-                      //   res.writeHead(200, {
-                      //       "Content-Type": "application/octet-stream",
-                      //       "Content-Disposition": "inline; filename=3d-store.glb",
-                      //       "Content-Length": fileSizeInBytes2,
-                      //       "Content-Transfer-Encoding": "binary"
-                      //   });
-                      //   res.end(data);
-                      // } catch(e) {
-                      //   res.json({
-                      //     error: "no file"
-                      //   });
-                      // }
-                    }
+                  await transferManager.downloadFileInChunks(('demos-5fg5Xq2wWTzhrKKu/' + env + '/' + currentDemo + filePath.split('?')[0]), {
+                    destination: glbPath,
+                    chunkSizeBytes: 1024,
                   });
+                  res.json({
+                    testing: 'reached here'
+                  })
+                  // file.download({
+                  //   destination: glbPath
+                  // }, async function(err, c) {
+                  //   if(err) {
+                  //     res.json({
+                  //       details: 'cannot download',
+                  //       error: err
+                  //     })
+                  //   }
+                  //   else {
+                  //     res.json({
+                  //       testing: 'reached here'
+                  //     });
+                  //     // try {
+                  //     //   const data = await fs.readFile(glbPath);
+                  //     //   var stats2 = fs.statSync(glbPath);
+                  //     //   var fileSizeInBytes2 = stats2.size;
+                  //     //   res.writeHead(200, {
+                  //     //       "Content-Type": "application/octet-stream",
+                  //     //       "Content-Disposition": "inline; filename=3d-store.glb",
+                  //     //       "Content-Length": fileSizeInBytes2,
+                  //     //       "Content-Transfer-Encoding": "binary"
+                  //     //   });
+                  //     //   res.end(data);
+                  //     // } catch(e) {
+                  //     //   res.json({
+                  //     //     error: "no file"
+                  //     //   });
+                  //     // }
+                  //   }
+                  // });
                 } catch(e2) {
                   res.json({
                     details: 'cannot dl',
