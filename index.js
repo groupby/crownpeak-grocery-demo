@@ -189,6 +189,18 @@ app.get('/grocery-demo/grocery-demo/assets/*', function(req, res) {
 
 });
 
+async function getGlbChunk(start, end) {
+  return new Promise(async (resolve, reject) => {
+    var buf = '';
+    let feed = file.createReadStream({start: start, end: end});
+    feed.on('data', function(d) {
+      buf += d;
+    }).on('end', function() {
+      resolve(buf);
+    })
+  });
+}
+
 app.get('/assets/*', function(req, res) {
   if(req.get('host').indexOf('groupby.cloud') == -1) {
     env = 'dev';
@@ -256,27 +268,46 @@ app.get('/assets/*', function(req, res) {
             var glbPath = '/tmp/3d-store.glb';
             if(ext == 'glb') {
               try {
-                const data = await fs.readFile(glbPath);
-                console.log('data', data);
-                var stats = fs.statSync(glbPath);
-                var fileSizeInBytes = stats.size;
-                res.writeHead(200, {
-                    "Content-Type": "application/octet-stream",
-                    "Content-Disposition": "inline; filename=3d-store.glb",
-                    "Content-Length": fileSizeInBytes,
-                    "Content-Transfer-Encoding": "binary"
-                });
-                res.end(data);
-              } catch(e) {
-                const transferManager = new TransferManager(bucket);
-                await transferManager.downloadFileInChunks(file, {
-                  destination: glbPath,
-                  chunkSizeBytes: 1024,
-                });
-                res.json({
-                  testing: 'reached here'
+
+                var buf = '';
+                let lastEnd = 0;
+                for(let i = 0; i < 467; i ++) {
+                  let start = i*1024*1024;
+                  let end = i*1024*1024 + 1024*1024 - 1;
+                  lastEnd = end;
+                  buf += await getGlbChunk(start, end);
+                }
+                // get final chunk:
+                let feed = file.createReadStream({start: (lastEnd + 1)});
+                feed.on('data', function(d) {
+                  buf += d;
+                }).on('end', function() {
+                  res.writeHead(200, {
+                      "Content-Type": "application/octet-stream",
+                      "Content-Disposition": "inline; filename=3d-store.glb",
+                      "Content-Length": buf.length,
+                      "Content-Transfer-Encoding": "binary"
+                  });
+                  res.end(buf);
                 })
-                try {
+
+                // const data = await fs.readFile(glbPath);
+                // console.log('data', data);
+                // var stats = fs.statSync(glbPath);
+                // var fileSizeInBytes = stats.size;
+                // res.writeHead(200, {
+                //     "Content-Type": "application/octet-stream",
+                //     "Content-Disposition": "inline; filename=3d-store.glb",
+                //     "Content-Length": fileSizeInBytes,
+                //     "Content-Transfer-Encoding": "binary"
+                // });
+                // res.end(data);
+              } catch(e) {
+                res.json({
+                  error: 'chunks failed'
+                });
+                // try {
+
                   // file.download({
                   //   destination: glbPath
                   // }, async function(err, c) {
@@ -308,12 +339,12 @@ app.get('/assets/*', function(req, res) {
                   //     // }
                   //   }
                   // });
-                } catch(e2) {
-                  res.json({
-                    details: 'cannot dl',
-                    error: e2
-                  });
-                }
+                // } catch(e2) {
+                //   res.json({
+                //     details: 'cannot dl',
+                //     error: e2
+                //   });
+                // }
               }
               // let filePath = req.url.split('/');
               // file.getMetadata().then(function(mdata) {
