@@ -205,7 +205,7 @@ app.post('/get-pps', async function(req, res) {
   if(req.body.user) {
     const bucket = storage.bucket(bucketName);
     let urlPath = filePath.split('/');
-    const file = bucket.file('demos-5fg5Xq2wWTzhrKKu/' + env + '/' + currentDemo + '/past-purchases/' + req.body.user + '.json';
+    const file = bucket.file('demos-5fg5Xq2wWTzhrKKu/' + env + '/' + currentDemo + '/past-purchases/' + req.body.user + '.json');
 
     file.exists(async function(err,exists) {
       if(!exists) {
