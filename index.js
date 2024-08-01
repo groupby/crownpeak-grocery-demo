@@ -201,10 +201,42 @@ async function getGlbChunk(file, start, end) {
   });
 }
 
+app.post('/save-pp', async function(req, res) {
+  if(req.body.user && req.body.pp) {
+    const bucket = storage.bucket(bucketName);
+    const file = 'demos-5fg5Xq2wWTzhrKKu/' + env + '/' + currentDemo + '/past-purchases/' + req.body.user + '.json';
+
+    const readableStream = new Readable();
+    readableStream.push(JSON.stringify(req.body.pp));
+    readableStream.push(null);
+    let gcFile = bucket.file(file);
+    readableStream.pipe(gcFile.createWriteStream({
+      resumable: false,
+      validation: false,
+      contentType: 'application/json'
+    }))
+    .on('error', (error) => {
+      res.json({
+        status: 'error1'
+      });
+    })
+    .on('finish', async () => {
+      res.json({
+        status: 'success'
+      });
+    });
+
+  }
+  else {
+    res.json({
+      status: 'error2'
+    });
+  }
+});
+
 app.post('/get-pps', async function(req, res) {
   if(req.body.user) {
     const bucket = storage.bucket(bucketName);
-    let urlPath = filePath.split('/');
     const file = bucket.file('demos-5fg5Xq2wWTzhrKKu/' + env + '/' + currentDemo + '/past-purchases/' + req.body.user + '.json');
 
     file.exists(async function(err,exists) {
