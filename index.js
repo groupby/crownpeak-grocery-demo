@@ -201,6 +201,50 @@ async function getGlbChunk(file, start, end) {
   });
 }
 
+app.post('/get-pps', async function(req, res) {
+  if(req.body.user) {
+    const bucket = storage.bucket(bucketName);
+    let urlPath = filePath.split('/');
+    const file = bucket.file('demos-5fg5Xq2wWTzhrKKu/' + env + '/' + currentDemo + '/past-purchases/' + req.body.user + '.json';
+
+    file.exists(async function(err,exists) {
+      if(!exists) {
+        res.json({
+          status: 'error1',
+          data: []
+        });
+      }
+      else {
+        let feed = file.createReadStream();
+        var buf = '';
+        feed.on('data', function(d) {
+          buf += d;
+        }).on('end', function() {
+          try {
+            let ppData = JSON.parse(buf);
+            res.json({
+              status: 'success',
+              data: ppData
+            });
+          } catch(e) {
+            res.json({
+              status: 'error2',
+              data: []
+            });
+          }
+        })
+      }
+    });
+
+  }
+  else {
+    res.json({
+      status: 'error3',
+      data: []
+    });
+  }
+});
+
 app.get('/assets/*', function(req, res) {
   if(req.get('host').indexOf('groupby.cloud') == -1) {
     env = 'dev';
