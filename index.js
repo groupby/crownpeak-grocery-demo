@@ -15,8 +15,6 @@ require('dotenv').config();
 app.use(cors());
 app.use(bodyParser.json());
 
-const currentDemo = 'grocery-demo';
-
 app.use(favicon(__dirname + '/favicon.png'));
 
 const {Storage} = require('@google-cloud/storage');
@@ -56,7 +54,7 @@ app.post('/pdp-api*', async function(req, res) {
       'skip-cache': 'true'
     }
   };
-  let pdp = await axios.get('https://search.acehardware.groupbycloud.com/api/search/product?collection=groceryProd&productId=' + req.body.id, options);
+  let pdp = await axios.get('https://search.acehardware.groupbycloud.com/api/search/product?collection=ACENETProduction&productId=' + req.body.id, options);
   res.json(pdp.data);
 });
 
@@ -287,14 +285,6 @@ app.get('/assets/*', function(req, res) {
 
 });
 
-app.get('/dev/' + currentDemo + '/*', (req, res) => {
-  res.redirect(req.url.replace('/dev',''));
-});
-
-app.get('/live/' + currentDemo + '/*', (req, res) => {
-  res.redirect(req.url.replace('/live',''));
-});
-
 app.get('/recipes-index.json', (req, res) => {
   if(req.get('host').indexOf('groupby.cloud') == -1) {
     env = 'dev';
@@ -338,8 +328,7 @@ app.get('/*', async (req, res) => {
         buf += d;
       }).on('end', async function() {
         buf = buf.replace('tile-img|[{image}]','tile-img|[{images.0.uri}]').replace('mini-cart-image|[{image}]','mini-cart-image|[{images.0.uri}]').replace('mini-cart-price|{price}','mini-cart-price|{priceInfo.price}').replace('product-card-price|{price,2}','product-card-price|{priceInfo.price,2}')
-        let regex = new RegExp('/' + currentDemo + '/','g');
-        var formattedPage = buf.replace(/\/dev\//g,'\/').replace(/\/live\//g,'\/').replace(regex,'/');
+        var formattedPage = buf.replace(/\/dev\//g,'\/').replace(/\/live\//g,'\/');
 
         if(req.url.indexOf('/recipe/') != -1) {
           let recUrlParts = req.url.split('/');
