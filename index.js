@@ -52,62 +52,12 @@ app.post('/pdp-api*', async function(req, res) {
     headers: {
       'Authorization': 'client-key ' + process.env.CLIENT_KEY,
       'Content-Type': 'application/json',
-      'X-Groupby-Customer-Id': 'demos',
+      'X-Groupby-Customer-Id': 'acehardware',
       'skip-cache': 'true'
     }
   };
-  let pdp = await axios.get('https://search.demos.groupbycloud.com/api/search/product?collection=groceryProd&productId=' + req.body.id, options);
+  let pdp = await axios.get('https://search.acehardware.groupbycloud.com/api/search/product?collection=groceryProd&productId=' + req.body.id, options);
   res.json(pdp.data);
-});
-
-app.post('/save-recipe-terms', async (req, res) => {
-  if(req.body.recipeId && req.body.searchTerms) {
-    const bucket = storage.bucket(bucketName);
-    let newFilePath = 'ace-poc/' + process.env.ENV + '/recipe-terms/' + req.body.recipeId + '.json';
-    if(req.body.searchTerms.length == 0) {
-      // delete file:
-      await bucket.file(newFilePath).delete();
-      res.json({
-        success: 'deleted'
-      })
-    }
-    else {
-      // save file:
-      const file = bucket.file(newFilePath);
-      if(file) {
-        const readableStream = new Readable();
-        readableStream.push(JSON.stringify(req.body.searchTerms));
-        readableStream.push(null);
-        let gcFile = bucket.file(newFilePath);
-        readableStream.pipe(gcFile.createWriteStream({
-          resumable: false,
-          validation: false,
-          contentType: 'application/json'
-        }))
-        .on('error', (error) => {
-          res.json({
-            "error": "failed to save to bucket: " + error
-          });
-        })
-        .on('finish', async () => {
-          res.json({
-            success: req.body.recipeId
-          });
-        });
-      }
-      else {
-        res.json({
-          "error": "Unable to create file"
-        });
-      }
-
-    }
-  }
-  else {
-    res.json({
-      error: 'invalid payload'
-    })
-  }
 });
 
 app.post('/search-api*', async (req, res) => {
@@ -115,7 +65,7 @@ app.post('/search-api*', async (req, res) => {
     headers: {
       'Authorization': 'client-key ' + process.env.CLIENT_KEY,
       'Content-Type': 'application/json',
-      'X-Groupby-Customer-Id': 'demos',
+      'X-Groupby-Customer-Id': 'acehardware',
       'skip-cache': 'true',
       'Access-Control-Allow-Origin' : '*'
     }
@@ -125,7 +75,7 @@ app.post('/search-api*', async (req, res) => {
     req.body.visitorId = req.cookies['gbi_visitorId'];
   }
 
-  let search = await axios.post('https://search.demos.groupbycloud.com/api/search', req.body, options);
+  let search = await axios.post('https://search.acehardware.groupbycloud.com/api/search', req.body, options);
   res.json(search.data);
 });
 
@@ -134,7 +84,7 @@ app.get('/grocery-demo/grocery-demo/assets/*', function(req, res) {
     env = 'dev';
   }
 
-  let filePath = req.url.replace('main','pantry');
+  let filePath = req.url;
 
   const bucket = storage.bucket(bucketName);
   let urlPath = filePath.split('/');
@@ -282,7 +232,7 @@ app.get('/assets/*', function(req, res) {
     env = 'dev';
   }
 
-  let filePath = req.url.replace('main','pantry');
+  let filePath = req.url;
 
   const bucket = storage.bucket(bucketName);
   let urlPath = filePath.split('/');
