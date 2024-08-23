@@ -17,7 +17,7 @@ app.use(bodyParser.json());
 
 const currentDemo = 'grocery-demo';
 
-app.use(favicon(__dirname + '/favicon.png'));
+app.use(favicon(__dirname + '/favicon.ico'));
 
 const {Storage} = require('@google-cloud/storage');
 var env = process.env.ENV;
