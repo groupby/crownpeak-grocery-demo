@@ -227,7 +227,7 @@ app.post('/get-pps', async function(req, res) {
   }
 });
 
-app.get('/images/*', function(req, res) => {
+app.get('/images/*', function(req, res) {
   let filePath = req.url;
 
   const bucket = storage.bucket(bucketName);
