@@ -81,7 +81,7 @@ app.post('/search-api*', async (req, res) => {
 
 app.get('/grocery-demo/grocery-demo/assets/*', function(req, res) {
   if(req.get('host').indexOf('groupby.cloud') == -1) {
-    env = 'dev';
+    // env = 'dev';
   }
 
   let filePath = req.url;
@@ -227,9 +227,55 @@ app.post('/get-pps', async function(req, res) {
   }
 });
 
+app.get('/images/*', function(req, res) => {
+  let filePath = req.url;
+
+  const bucket = storage.bucket(bucketName);
+  let urlPath = filePath.split('/');
+  const file = bucket.file('ace-poc/' + process.env.ENV + filePath.split('?')[0]);
+
+  file.exists(async function(err,exists) {
+    if(!exists) {
+      res.send('error 404 - ' + 'ace-poc/' + process.env.ENV + filePath.split('?')[0]);
+    }
+    else {
+      let parts = filePath.split('.');
+      let ext = '';
+      if(parts.length > 1) {
+        ext = parts[1].split('?')[0].toLowerCase();
+      }
+      // css, js
+      // json
+      let imgExts = [
+        'png',
+        'jpg',
+        'jpeg',
+        'svg',
+        'gif',
+        'webp'
+      ];
+      if(imgExts.indexOf(ext) != -1) {
+        let filePath = req.url.split('/');
+        file.getMetadata().then(function(data) {
+          res.writeHead(200, {
+              "Content-Type": `image/${ext.replace('svg','svg+xml').replace('jpg','jpeg')}`,
+              "Content-Disposition": "attachment; filename=" + filePath[filePath.length - 1],
+              "Content-Length": data[0].size,
+              "Content-Transfer-Encoding": "binary"
+          });
+          file.createReadStream({ encoding: null }).pipe(res);
+        });
+      }
+      else {
+        res.redirect('https://storage.googleapis.com/groupby-demo-images/image-not-found.png');
+      }
+    }
+  });
+});
+
 app.get('/assets/*', function(req, res) {
   if(req.get('host').indexOf('groupby.cloud') == -1) {
-    env = 'dev';
+    // env = 'dev';
   }
 
   let filePath = req.url;
@@ -297,7 +343,7 @@ app.get('/live/' + currentDemo + '/*', (req, res) => {
 
 app.get('/recipes-index.json', (req, res) => {
   if(req.get('host').indexOf('groupby.cloud') == -1) {
-    env = 'dev';
+    // env = 'dev';
   }
 
   const bucket = storage.bucket(bucketName);
@@ -322,7 +368,7 @@ app.get('/recipes-index.json', (req, res) => {
 
 app.get('/*', async (req, res) => {
   if(req.get('host').indexOf('groupby.cloud') == -1) {
-    env = 'dev';
+    // env = 'dev';
   }
   const bucket = storage.bucket(bucketName);
   const file = bucket.file('ace-poc/' + process.env.ENV + '/homepage.html');
