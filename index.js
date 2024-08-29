@@ -79,6 +79,24 @@ app.post('/search-api*', async (req, res) => {
   res.json(search.data);
 });
 
+app.post('/autocomplete*', async (req, res) => {
+  let options = {
+    headers: {
+      'Authorization': 'client-key ' + process.env.CLIENT_KEY,
+      'Content-Type': 'application/json',
+      'accept': 'application/json',
+      'X-Groupby-Customer-Id': 'acehardware'
+    }
+  };
+
+  if(req.cookies && req.cookies['gbi_visitorId']) {
+    req.body.visitorId = req.cookies['gbi_visitorId'];
+  }
+
+  let auto = await axios.get(`https://autocomplete.acehardware.groupbycloud.com/api/request?collection=${req.body.collection}&area=${req.body.area}&searchItems=${req.body.pageSize}&query=${req.body.q}`, options);
+  res.json(auto.data);
+});
+
 app.get('/grocery-demo/grocery-demo/assets/*', function(req, res) {
   if(req.get('host').indexOf('groupby.cloud') == -1) {
     // env = 'dev';
