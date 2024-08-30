@@ -443,14 +443,14 @@ app.get('/*', async (req, res) => {
                     headers: {
                       'Authorization': 'client-key ' + process.env.CLIENT_KEY,
                       'Content-Type': 'application/json',
-                      'X-Groupby-Customer-Id': 'demos',
+                      'X-Groupby-Customer-Id': 'acehardware',
                       'skip-cache': 'true'
                     }
                   };
 
-                  let megaData = await axios.get(`https://cm.demos.groupbycloud.com/api/megamenus/demo-megamenu/categories`, megaOptions);
+                  let megaData = await axios.get(`https://cm.acehardware.groupbycloud.com/api/megamenus/demo-megamenu/categories`, megaOptions);
 
-                  let visualData = await axios.get(`https://cm.demos.groupbycloud.com/api/megamenus/demo-visualmenu/categories`, megaOptions);
+                  let visualData = await axios.get(`https://cm.acehardware.groupbycloud.com/api/megamenus/demo-visualmenu/categories`, megaOptions);
 
                   let addedCode = `<div class="megamenu-data invisible">${JSON.stringify(megaData.data)}</div><div class="visualmenu-data invisible">${JSON.stringify(visualData.data)}</div>`;
 
