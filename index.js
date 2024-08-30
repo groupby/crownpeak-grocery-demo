@@ -79,6 +79,23 @@ app.post('/search-api*', async (req, res) => {
   res.json(search.data);
 });
 
+app.post('/recs*', async (req, res) => {
+  let options = {
+    headers: {
+      'Authorization': 'client-key ' + process.env.CLIENT_KEY,
+      'Content-Type': 'application/json',
+      'X-Groupby-Customer-Id': 'acehardware'
+    }
+  };
+
+  if(req.cookies && req.cookies['gbi_visitorId']) {
+    // req.body.visitorId = req.cookies['gbi_visitorId'];
+  }
+
+  let recs = await axios.post('https://recsapi.acehardware.groupbycloud.com/api/recommendation', req.body, options);
+  res.json(recs.data);
+});
+
 app.post('/autocomplete*', async (req, res) => {
   let options = {
     headers: {
