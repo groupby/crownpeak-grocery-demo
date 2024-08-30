@@ -80,6 +80,7 @@ app.post('/search-api*', async (req, res) => {
 });
 
 app.post('/facet*', async (req, res) => {
+  console.log('facet call');
   let options = {
     headers: {
       'Authorization': 'client-key ' + process.env.CLIENT_KEY,
