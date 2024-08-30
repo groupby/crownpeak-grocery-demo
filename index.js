@@ -79,6 +79,23 @@ app.post('/search-api*', async (req, res) => {
   res.json(search.data);
 });
 
+app.post('/facet*', async (req, res) => {
+  let options = {
+    headers: {
+      'Authorization': 'client-key ' + process.env.CLIENT_KEY,
+      'Content-Type': 'application/json',
+      'X-Groupby-Customer-Id': 'acehardware'
+    }
+  };
+
+  if(req.cookies && req.cookies['gbi_visitorId']) {
+    req.body.visitorId = req.cookies['gbi_visitorId'];
+  }
+
+  let facets = await axios.post('https://search.acehardware.groupbycloud.com/api/search/facet', req.body, options);
+  res.json(facets.data);
+});
+
 app.post('/recs*', async (req, res) => {
   let options = {
     headers: {
