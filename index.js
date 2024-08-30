@@ -438,23 +438,6 @@ app.get('/*', async (req, res) => {
                   buf2 += d;
                 }).on('end', async function() {
                   formattedPage = formattedPage.replace('<header>',('<div class="invisible recipe-search-terms">' + buf2 + '</div><header>'));
-                  // insert category/mm:
-                  let megaOptions = {
-                    headers: {
-                      'Authorization': 'client-key ' + process.env.CLIENT_KEY,
-                      'Content-Type': 'application/json',
-                      'X-Groupby-Customer-Id': 'acehardware',
-                      'skip-cache': 'true'
-                    }
-                  };
-
-                  let megaData = await axios.get(`https://cm.acehardware.groupbycloud.com/api/megamenus/demo-megamenu/categories`, megaOptions);
-
-                  let visualData = await axios.get(`https://cm.acehardware.groupbycloud.com/api/megamenus/demo-visualmenu/categories`, megaOptions);
-
-                  let addedCode = `<div class="megamenu-data invisible">${JSON.stringify(megaData.data)}</div><div class="visualmenu-data invisible">${JSON.stringify(visualData.data)}</div>`;
-
-                  formattedPage = formattedPage.replace('</body>',`${addedCode}</body>`);
 
                   res.send(formattedPage);
                 });
@@ -464,6 +447,24 @@ app.get('/*', async (req, res) => {
 
         }
         else {
+          // insert category/mm:
+          let megaOptions = {
+            headers: {
+              'Authorization': 'client-key ' + process.env.CLIENT_KEY,
+              'Content-Type': 'application/json',
+              'X-Groupby-Customer-Id': 'acehardware',
+              'skip-cache': 'true'
+            }
+          };
+
+          let megaData = await axios.get(`https://cm.acehardware.groupbycloud.com/api/megamenus/demo-megamenu/categories`, megaOptions);
+
+          let visualData = await axios.get(`https://cm.acehardware.groupbycloud.com/api/megamenus/demo-visualmenu/categories`, megaOptions);
+
+          let addedCode = `<div class="megamenu-data invisible">${JSON.stringify(megaData.data)}</div><div class="visualmenu-data invisible">${JSON.stringify(visualData.data)}</div>`;
+
+          formattedPage = formattedPage.replace('</body>',`${addedCode}</body>`);
+
           res.send(formattedPage);
         }
       })
