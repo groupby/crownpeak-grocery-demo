@@ -89,7 +89,7 @@ app.post('/recs*', async (req, res) => {
   };
 
   if(req.cookies && req.cookies['gbi_visitorId']) {
-    // req.body.visitorId = req.cookies['gbi_visitorId'];
+    req.body.visitorId = req.cookies['gbi_visitorId'];
   }
 
   let recs = await axios.post('https://recsapi.acehardware.groupbycloud.com/api/recommendation', req.body, options);
