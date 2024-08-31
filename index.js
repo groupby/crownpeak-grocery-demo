@@ -9,6 +9,8 @@ var cors = require('cors');
 var cookieParser = require('cookie-parser');
 app.use(cookieParser());
 const Readable = require('stream').Readable;
+const {Translate} = require('@google-cloud/translate').v2;
+const translate = new Translate();
 
 require('dotenv').config();
 
@@ -46,6 +48,47 @@ async function get404() {
     })
   });
 }
+
+async function testGoogleTextToSpeech(lang,audioBuffer) {
+    const speech = require('@google-cloud/speech');
+    const client = new speech.SpeechClient( { credentials: JSON.parse(process.env.SPEECH_KEY) });
+
+    const audio = {
+    content: audioBuffer.toString('base64'),
+    };
+    const config = {
+    languageCode: lang,
+    };
+    const request = {
+    audio: audio,
+    config: config,
+    };
+
+    const [response] = await client.recognize(request);
+    const transcription = response.results
+    .map(result => result.alternatives[0].transcript)
+    .join('\n');
+    return transcription;
+}
+
+app.post('/translate', async function(req, res) {
+  let [translations] = await translate.translate(decodeURIComponent(req.body.text), 'en-US');
+  translations = Array.isArray(translations) ? translations : [translations];
+  res.json({
+    results: translations
+  });
+});
+
+app.post('/speech', upload.any(), async (req, res) => {
+    console.log("Getting text transcription..");
+    let lang = (req.query.lang || 'en-US');
+    let transcription = await testGoogleTextToSpeech(lang,req.files[0].buffer);
+    console.log("Text transcription: " + transcription);
+    res.json({
+      transcription: transcription,
+      lang: lang
+    });
+});
 
 app.post('/pdp-api*', async function(req, res) {
   let options = {
