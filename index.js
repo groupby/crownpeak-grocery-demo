@@ -365,7 +365,7 @@ app.get('/images/*', function(req, res) {
         });
       }
       else {
-        res.redirect('https://storage.googleapis.com/groupby-demo-images/image-not-found.png');
+        res.redirect('/images/no-image.svg');
       }
     }
   });
