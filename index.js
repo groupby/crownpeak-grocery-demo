@@ -214,11 +214,11 @@ app.post('/pdp-api*', async function(req, res) {
     headers: {
       'Authorization': 'client-key ' + process.env.CLIENT_KEY,
       'Content-Type': 'application/json',
-      'X-Groupby-Customer-Id': 'acehardware',
+      'X-Groupby-Customer-Id': 'lacomer',
       'skip-cache': 'true'
     }
   };
-  let pdp = await axios.get('https://search.acehardware.groupbycloud.com/api/search/product?collection=ACENETProduction&productId=' + req.body.id, options);
+  let pdp = await axios.get('https://search.lacomer.groupbycloud.com/api/search/product?collection=Production&productId=' + req.body.id, options);
   res.json(pdp.data);
 });
 
@@ -227,7 +227,7 @@ app.post('/search-api*', async (req, res) => {
     headers: {
       'Authorization': 'client-key ' + process.env.CLIENT_KEY,
       'Content-Type': 'application/json',
-      'X-Groupby-Customer-Id': 'acehardware',
+      'X-Groupby-Customer-Id': 'lacomer',
       'skip-cache': 'true',
       'Access-Control-Allow-Origin' : '*'
     }
@@ -237,62 +237,73 @@ app.post('/search-api*', async (req, res) => {
     req.body.visitorId = req.cookies['gbi_visitorId'];
   }
 
-  let search = await axios.post('https://search.acehardware.groupbycloud.com/api/search', req.body, options);
+  let search = await axios.post('https://search.lacomer.groupbycloud.com/api/search', req.body, options);
   res.json(search.data);
 });
 
-app.post('/facet*', async (req, res) => {
-  console.log('facet call');
-  let options = {
-    headers: {
-      'Authorization': 'client-key ' + process.env.CLIENT_KEY,
-      'Content-Type': 'application/json',
-      'X-Groupby-Customer-Id': 'acehardware'
-    }
-  };
+// app.post('/facet*', async (req, res) => {
+//   console.log('facet call');
+//   let options = {
+//     headers: {
+//       'Authorization': 'client-key ' + process.env.CLIENT_KEY,
+//       'Content-Type': 'application/json',
+//       'X-Groupby-Customer-Id': 'acehardware'
+//     }
+//   };
+//
+//   if(req.cookies && req.cookies['gbi_visitorId']) {
+//     req.body.visitorId = req.cookies['gbi_visitorId'];
+//   }
+//
+//   let facets = await axios.post('https://search.acehardware.groupbycloud.com/api/search/facet', req.body, options);
+//   res.json(facets.data);
+// });
+//
+// app.post('/recs*', async (req, res) => {
+//   let options = {
+//     headers: {
+//       'Authorization': 'client-key ' + process.env.CLIENT_KEY,
+//       'Content-Type': 'application/json',
+//       'X-Groupby-Customer-Id': 'acehardware'
+//     }
+//   };
+//
+//   if(req.cookies && req.cookies['gbi_visitorId']) {
+//     req.body.visitorId = req.cookies['gbi_visitorId'];
+//   }
+//
+//   let recs = await axios.post('https://recsapi.acehardware.groupbycloud.com/api/recommendation', req.body, options);
+//   res.json(recs.data);
+// });
+//
+// app.post('/autocomplete*', async (req, res) => {
+//   let options = {
+//     headers: {
+//       'Authorization': 'client-key ' + process.env.CLIENT_KEY,
+//       'Content-Type': 'application/json',
+//       'accept': 'application/json',
+//       'X-Groupby-Customer-Id': 'acehardware'
+//     }
+//   };
+//
+//   if(req.cookies && req.cookies['gbi_visitorId']) {
+//     req.body.visitorId = req.cookies['gbi_visitorId'];
+//   }
+//
+//   let auto = await axios.get(`https://autocomplete.acehardware.groupbycloud.com/api/request?collection=${req.query.collection}&area=${req.query.area}&searchItems=${req.query.pageSize}&query=${req.query.q}`, options);
+//   res.json(auto.data);
+// });
 
-  if(req.cookies && req.cookies['gbi_visitorId']) {
-    req.body.visitorId = req.cookies['gbi_visitorId'];
-  }
 
-  let facets = await axios.post('https://search.acehardware.groupbycloud.com/api/search/facet', req.body, options);
-  res.json(facets.data);
-});
 
-app.post('/recs*', async (req, res) => {
-  let options = {
-    headers: {
-      'Authorization': 'client-key ' + process.env.CLIENT_KEY,
-      'Content-Type': 'application/json',
-      'X-Groupby-Customer-Id': 'acehardware'
-    }
-  };
 
-  if(req.cookies && req.cookies['gbi_visitorId']) {
-    req.body.visitorId = req.cookies['gbi_visitorId'];
-  }
 
-  let recs = await axios.post('https://recsapi.acehardware.groupbycloud.com/api/recommendation', req.body, options);
-  res.json(recs.data);
-});
 
-app.post('/autocomplete*', async (req, res) => {
-  let options = {
-    headers: {
-      'Authorization': 'client-key ' + process.env.CLIENT_KEY,
-      'Content-Type': 'application/json',
-      'accept': 'application/json',
-      'X-Groupby-Customer-Id': 'acehardware'
-    }
-  };
 
-  if(req.cookies && req.cookies['gbi_visitorId']) {
-    req.body.visitorId = req.cookies['gbi_visitorId'];
-  }
 
-  let auto = await axios.get(`https://autocomplete.acehardware.groupbycloud.com/api/request?collection=${req.query.collection}&area=${req.query.area}&searchItems=${req.query.pageSize}&query=${req.query.q}`, options);
-  res.json(auto.data);
-});
+
+
+
 
 app.get('/grocery-demo/grocery-demo/assets/*', function(req, res) {
   if(req.get('host').indexOf('groupby.cloud') == -1) {
@@ -628,22 +639,22 @@ app.get('/*', async (req, res) => {
         }
         else {
           // insert category/mm:
-          let megaOptions = {
-            headers: {
-              'Authorization': 'client-key ' + process.env.CLIENT_KEY,
-              'Content-Type': 'application/json',
-              'X-Groupby-Customer-Id': 'acehardware',
-              'skip-cache': 'true'
-            }
-          };
-
-          let megaData = await axios.get(`https://cm.acehardware.groupbycloud.com/api/megamenus/demo-megamenu/categories`, megaOptions);
-
-          let visualData = await axios.get(`https://cm.acehardware.groupbycloud.com/api/megamenus/demo-visualmenu/categories`, megaOptions);
-
-          let addedCode = `<div class="megamenu-data invisible">${JSON.stringify(megaData.data)}</div><div class="visualmenu-data invisible">${JSON.stringify(visualData.data)}</div>`;
-
-          formattedPage = formattedPage.replace('</body>',`${addedCode}</body>`);
+          // let megaOptions = {
+          //   headers: {
+          //     'Authorization': 'client-key ' + process.env.CLIENT_KEY,
+          //     'Content-Type': 'application/json',
+          //     'X-Groupby-Customer-Id': 'acehardware',
+          //     'skip-cache': 'true'
+          //   }
+          // };
+          //
+          // let megaData = await axios.get(`https://cm.acehardware.groupbycloud.com/api/megamenus/demo-megamenu/categories`, megaOptions);
+          //
+          // let visualData = await axios.get(`https://cm.acehardware.groupbycloud.com/api/megamenus/demo-visualmenu/categories`, megaOptions);
+          //
+          // let addedCode = `<div class="megamenu-data invisible">${JSON.stringify(megaData.data)}</div><div class="visualmenu-data invisible">${JSON.stringify(visualData.data)}</div>`;
+          //
+          // formattedPage = formattedPage.replace('</body>',`${addedCode}</body>`);
 
           res.send(formattedPage);
         }
