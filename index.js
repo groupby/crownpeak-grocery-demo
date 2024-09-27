@@ -148,7 +148,7 @@ app.use(function (req, res, next) {
 
 async function get404() {
   const bucket = storage.bucket(bucketName);
-  const file = bucket.file('ace-poc/' + process.env.ENV + '/404.html');
+  const file = bucket.file('poc-orgill/' + process.env.ENV + '/404.html');
 
   return new Promise((resolve, reject) => {
     let feed = file.createReadStream();
@@ -214,11 +214,11 @@ app.post('/pdp-api*', async function(req, res) {
     headers: {
       'Authorization': 'client-key ' + process.env.CLIENT_KEY,
       'Content-Type': 'application/json',
-      'X-Groupby-Customer-Id': 'acehardware',
+      'X-Groupby-Customer-Id': 'orgill',
       'skip-cache': 'true'
     }
   };
-  let pdp = await axios.get('https://search.acehardware.groupbycloud.com/api/search/product?collection=ACENETProduction&productId=' + req.body.id, options);
+  let pdp = await axios.get('https://search.sandbox.groupbycloud.com/api/search/api/search/product?collection=ACENETProduction&productId=' + req.body.id, options);
   res.json(pdp.data);
 });
 
@@ -227,7 +227,7 @@ app.post('/search-api*', async (req, res) => {
     headers: {
       'Authorization': 'client-key ' + process.env.CLIENT_KEY,
       'Content-Type': 'application/json',
-      'X-Groupby-Customer-Id': 'acehardware',
+      'X-Groupby-Customer-Id': 'orgill',
       'skip-cache': 'true',
       'Access-Control-Allow-Origin' : '*'
     }
@@ -237,7 +237,7 @@ app.post('/search-api*', async (req, res) => {
     req.body.visitorId = req.cookies['gbi_visitorId'];
   }
 
-  let search = await axios.post('https://search.acehardware.groupbycloud.com/api/search', req.body, options);
+  let search = await axios.post('https://search.sandbox.groupbycloud.com/api/search/api/search', req.body, options);
   res.json(search.data);
 });
 
@@ -247,7 +247,7 @@ app.post('/facet*', async (req, res) => {
     headers: {
       'Authorization': 'client-key ' + process.env.CLIENT_KEY,
       'Content-Type': 'application/json',
-      'X-Groupby-Customer-Id': 'acehardware'
+      'X-Groupby-Customer-Id': 'orgill'
     }
   };
 
@@ -255,7 +255,7 @@ app.post('/facet*', async (req, res) => {
     req.body.visitorId = req.cookies['gbi_visitorId'];
   }
 
-  let facets = await axios.post('https://search.acehardware.groupbycloud.com/api/search/facet', req.body, options);
+  let facets = await axios.post('https://search.sandbox.groupbycloud.com/api/search/api/search/facet', req.body, options);
   res.json(facets.data);
 });
 
@@ -264,7 +264,7 @@ app.post('/recs*', async (req, res) => {
     headers: {
       'Authorization': 'client-key ' + process.env.CLIENT_KEY,
       'Content-Type': 'application/json',
-      'X-Groupby-Customer-Id': 'acehardware'
+      'X-Groupby-Customer-Id': 'orgill'
     }
   };
 
@@ -272,7 +272,7 @@ app.post('/recs*', async (req, res) => {
     req.body.visitorId = req.cookies['gbi_visitorId'];
   }
 
-  let recs = await axios.post('https://recsapi.acehardware.groupbycloud.com/api/recommendation', req.body, options);
+  let recs = await axios.post('https://recsapi.sandbox.groupbycloud.com/api/recommendation', req.body, options);
   res.json(recs.data);
 });
 
@@ -282,7 +282,7 @@ app.post('/autocomplete*', async (req, res) => {
       'Authorization': 'client-key ' + process.env.CLIENT_KEY,
       'Content-Type': 'application/json',
       'accept': 'application/json',
-      'X-Groupby-Customer-Id': 'acehardware'
+      'X-Groupby-Customer-Id': 'orgill'
     }
   };
 
@@ -290,7 +290,7 @@ app.post('/autocomplete*', async (req, res) => {
     req.body.visitorId = req.cookies['gbi_visitorId'];
   }
 
-  let auto = await axios.get(`https://autocomplete.acehardware.groupbycloud.com/api/request?collection=${req.query.collection}&area=${req.query.area}&searchItems=${req.query.pageSize}&query=${req.query.q}`, options);
+  let auto = await axios.get(`https://autocomplete.sandbox.groupbycloud.com/api/request?collection=${req.query.collection}&area=${req.query.area}&searchItems=${req.query.pageSize}&query=${req.query.q}`, options);
   res.json(auto.data);
 });
 
@@ -303,11 +303,11 @@ app.get('/grocery-demo/grocery-demo/assets/*', function(req, res) {
 
   const bucket = storage.bucket(bucketName);
   let urlPath = filePath.split('/');
-  const file = bucket.file('ace-poc/' + process.env.ENV + filePath.split('?')[0]);
+  const file = bucket.file('poc-orgill/' + process.env.ENV + filePath.split('?')[0]);
 
   file.exists(function(err,exists) {
     if(!exists) {
-      res.send('error 404 - ' + 'ace-poc/' + process.env.ENV + filePath.split('?')[0]);
+      res.send('error 404 - ' + 'poc-orgill/' + process.env.ENV + filePath.split('?')[0]);
     }
     else {
       let parts = filePath.split('.');
@@ -369,7 +369,7 @@ async function getGlbChunk(file, start, end) {
 app.post('/save-pp', async function(req, res) {
   if(req.body.user && req.body.pp) {
     const bucket = storage.bucket(bucketName);
-    const file = 'ace-poc/' + process.env.ENV + '/past-purchases/' + req.body.user + '.json';
+    const file = 'poc-orgill/' + process.env.ENV + '/past-purchases/' + req.body.user + '.json';
 
     const readableStream = new Readable();
     readableStream.push(JSON.stringify(req.body.pp));
@@ -402,7 +402,7 @@ app.post('/save-pp', async function(req, res) {
 app.post('/get-pps', async function(req, res) {
   if(req.body.user) {
     const bucket = storage.bucket(bucketName);
-    const file = bucket.file('ace-poc/' + process.env.ENV + '/past-purchases/' + req.body.user + '.json');
+    const file = bucket.file('poc-orgill/' + process.env.ENV + '/past-purchases/' + req.body.user + '.json');
 
     file.exists(async function(err,exists) {
       if(!exists) {
@@ -447,11 +447,11 @@ app.get('/images/*', function(req, res) {
 
   const bucket = storage.bucket(bucketName);
   let urlPath = filePath.split('/');
-  const file = bucket.file('ace-poc/' + process.env.ENV + filePath.split('?')[0]);
+  const file = bucket.file('poc-orgill/' + process.env.ENV + filePath.split('?')[0]);
 
   file.exists(async function(err,exists) {
     if(!exists) {
-      res.send('error 404 - ' + 'ace-poc/' + process.env.ENV + filePath.split('?')[0]);
+      res.send('error 404 - ' + 'poc-orgill/' + process.env.ENV + filePath.split('?')[0]);
     }
     else {
       let parts = filePath.split('.');
@@ -497,11 +497,11 @@ app.get('/assets/*', function(req, res) {
 
   const bucket = storage.bucket(bucketName);
   let urlPath = filePath.split('/');
-  const file = bucket.file('ace-poc/' + process.env.ENV + filePath.split('?')[0]);
+  const file = bucket.file('poc-orgill/' + process.env.ENV + filePath.split('?')[0]);
 
   file.exists(async function(err,exists) {
     if(!exists) {
-      res.send('error 404 - ' + 'ace-poc/' + process.env.ENV + filePath.split('?')[0]);
+      res.send('error 404 - ' + 'poc-orgill/' + process.env.ENV + filePath.split('?')[0]);
     }
     else {
       let parts = filePath.split('.');
@@ -563,11 +563,11 @@ app.get('/recipes-index.json', (req, res) => {
 
   const bucket = storage.bucket(bucketName);
   let urlPath = req.url.split('/');
-  const file = bucket.file('ace-poc/' + process.env.ENV + req.url.split('?')[0]);
+  const file = bucket.file('poc-orgill/' + process.env.ENV + req.url.split('?')[0]);
 
   file.exists(function(err,exists) {
     if(!exists) {
-      res.send('error 404 - ' + 'ace-poc/' + process.env.ENV + filePath.split('?')[0]);
+      res.send('error 404 - ' + 'poc-orgill/' + process.env.ENV + filePath.split('?')[0]);
     }
     else {
       let feed = file.createReadStream();
@@ -586,7 +586,7 @@ app.get('/*', async (req, res) => {
     // env = 'dev';
   }
   const bucket = storage.bucket(bucketName);
-  const file = bucket.file('ace-poc/' + process.env.ENV + '/homepage.html');
+  const file = bucket.file('poc-orgill/' + process.env.ENV + '/homepage.html');
 
   file.exists(function(err,exists) {
     if(!exists) {
@@ -606,7 +606,7 @@ app.get('/*', async (req, res) => {
           let recUrlParts = req.url.split('/');
           if(recUrlParts.length > 2) {
             let recipeId = recUrlParts[recUrlParts.length - 2];
-            const file2 = bucket.file('ace-poc/' + process.env.ENV + '/recipe-terms/' + recipeId + '.json');
+            const file2 = bucket.file('poc-orgill/' + process.env.ENV + '/recipe-terms/' + recipeId + '.json');
             file2.exists(function(err,exists2) {
               if(!exists2) {
                 res.send(formattedPage);
@@ -632,14 +632,14 @@ app.get('/*', async (req, res) => {
             headers: {
               'Authorization': 'client-key ' + process.env.CLIENT_KEY,
               'Content-Type': 'application/json',
-              'X-Groupby-Customer-Id': 'acehardware',
+              'X-Groupby-Customer-Id': 'orgill',
               'skip-cache': 'true'
             }
           };
 
-          let megaData = await axios.get(`https://cm.acehardware.groupbycloud.com/api/megamenus/demo-megamenu/categories`, megaOptions);
+          let megaData = await axios.get(`https://cm.sandbox.groupbycloud.com/api/megamenus/demo-megamenu/categories`, megaOptions);
 
-          let visualData = await axios.get(`https://cm.acehardware.groupbycloud.com/api/megamenus/demo-visualmenu/categories`, megaOptions);
+          let visualData = await axios.get(`https://cm.sandbox.groupbycloud.com/api/megamenus/demo-visualmenu/categories`, megaOptions);
 
           let addedCode = `<div class="megamenu-data invisible">${JSON.stringify(megaData.data)}</div><div class="visualmenu-data invisible">${JSON.stringify(visualData.data)}</div>`;
 
