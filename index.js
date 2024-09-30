@@ -218,8 +218,14 @@ app.post('/pdp-api*', async function(req, res) {
       'skip-cache': 'true'
     }
   };
-  let pdp = await axios.get('https://search.sandbox.groupbycloud.com/api/search/api/search/product?collection=ACENETProduction&productId=' + req.body.id, options);
-  res.json(pdp.data);
+  try {
+    let pdp = await axios.get('https://search.sandbox.groupbycloud.com/api/search/api/search/product?collection=ACENETProduction&productId=' + req.body.id, options);
+    res.json(pdp.data);
+  }catch(e) {
+    res.json({
+      "error": e
+    });
+  }
 });
 
 app.post('/search-api*', async (req, res) => {
@@ -237,8 +243,14 @@ app.post('/search-api*', async (req, res) => {
     req.body.visitorId = req.cookies['gbi_visitorId'];
   }
 
-  let search = await axios.post('https://search.sandbox.groupbycloud.com/api/search/api/search', req.body, options);
-  res.json(search.data);
+  try {
+    let search = await axios.post('https://search.sandbox.groupbycloud.com/api/search/api/search', req.body, options);
+    res.json(search.data);
+  }catch(e) {
+    res.json({
+      "error": e
+    });
+  }
 });
 
 app.post('/facet*', async (req, res) => {
