@@ -219,7 +219,7 @@ app.post('/pdp-api*', async function(req, res) {
     }
   };
   try {
-    let pdp = await axios.get('https://search.sandbox.groupbycloud.com/api/search/api/search/product?collection=ACENETProduction&productId=' + req.body.id, options);
+    let pdp = await axios.get('https://search.sandbox.groupbycloud.com/api/search/product?collection=ACENETProduction&productId=' + req.body.id, options);
     res.json(pdp.data);
   }catch(e) {
     res.json({
@@ -244,7 +244,7 @@ app.post('/search-api*', async (req, res) => {
   }
 
   try {
-    let search = await axios.post('https://search.sandbox.groupbycloud.com/api/search/api/search', req.body, options);
+    let search = await axios.post('https://search.sandbox.groupbycloud.com/api/search', req.body, options);
     res.json(search.data);
   }catch(e) {
     res.json({
