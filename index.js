@@ -284,8 +284,14 @@ app.post('/recs*', async (req, res) => {
     req.body.visitorId = req.cookies['gbi_visitorId'];
   }
 
-  let recs = await axios.post('https://recsapi.sandbox.groupbycloud.com/api/recommendation', req.body, options);
-  res.json(recs.data);
+  try {
+    let recs = await axios.post('https://recsapi.sandbox.groupbycloud.com/api/recommendation', req.body, options);
+    res.json(recs.data);
+  } catch(e) {
+    res.json({
+      error: e
+    });
+  }
 });
 
 app.post('/autocomplete*', async (req, res) => {
