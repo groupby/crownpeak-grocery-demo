@@ -267,7 +267,7 @@ app.post('/facet*', async (req, res) => {
     req.body.visitorId = req.cookies['gbi_visitorId'];
   }
 
-  let facets = await axios.post('https://search.sandbox.groupbycloud.com/api/search/api/search/facet', req.body, options);
+  let facets = await axios.post('https://search.sandbox.groupbycloud.com/api/search/facet', req.body, options);
   res.json(facets.data);
 });
 
