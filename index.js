@@ -599,6 +599,29 @@ app.get('/recipes-index.json', (req, res) => {
   });
 });
 
+app.get('/trigger', async (req, res) => {
+  let out = `<!doctype html>
+  <html>
+  <head>
+    <title>Trigger Script - Orgill POC</title>
+  </head>
+  <body>
+    <h2>Script Results</h2>
+    <div class="results">
+      <div>...</div>
+    </div>
+    <iframe style="display: none;"></iframe>
+    <script>
+    setTimeout(function() {
+      document.querySelector('iframe').setAttribute('src','/');
+    }, 2000);
+    </script>
+  </body>
+  </html>
+  `;
+  res.send(out);
+});
+
 app.get('/*', async (req, res) => {
   if(req.get('host').indexOf('groupby.cloud') == -1) {
     // env = 'dev';
