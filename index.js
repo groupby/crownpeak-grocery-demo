@@ -617,7 +617,7 @@ app.get('/trigger', async (req, res) => {
         <div>...</div>
       </div>
       <iframe style="display: none;"></iframe>
-      <script src="/grocery-demo/assets/trigger.js"></script>
+      <script src="/assets/trigger.js"></script>
     </body>
     </html>
     `;
