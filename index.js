@@ -29,6 +29,8 @@ var env = process.env.ENV;
 const storage = new Storage('groupby-demos',process.env.GOOGLE_STORAGE);
 const bucketName = 'demos_content';
 
+var triggerOK = false;
+
 app.use(function (req, res, next) {
   if(req.query.code) {
     var options = {
@@ -128,6 +130,9 @@ app.use(function (req, res, next) {
         try {
           let decoded = JSON.parse(Buffer.from(req.cookies.appAuth.split('.')[1], 'base64').toString());
           console.log('checking', process.env.AUTH0_PERMS);
+          if(decoded.email && decoded.email == 'presales@gmail.com') {
+            triggerOK = true;
+          }
           if(decoded.email.indexOf('@groupbyinc.com') != -1 || decoded.permissions.indexOf(process.env.AUTH0_PERMS) != -1) {
             // login OK
             next();
@@ -600,26 +605,27 @@ app.get('/recipes-index.json', (req, res) => {
 });
 
 app.get('/trigger', async (req, res) => {
-  let out = `<!doctype html>
-  <html>
-  <head>
-    <title>Trigger Script - Orgill POC</title>
-  </head>
-  <body>
-    <h2>Script Results</h2>
-    <div class="results">
-      <div>...</div>
-    </div>
-    <iframe style="display: none;"></iframe>
-    <script>
-    setTimeout(function() {
-      document.querySelector('iframe').setAttribute('src','/');
-    }, 2000);
-    </script>
-  </body>
-  </html>
-  `;
-  res.send(out);
+  if(triggerOK) {
+    let out = `<!doctype html>
+    <html>
+    <head>
+      <title>Trigger Script - Orgill POC</title>
+    </head>
+    <body>
+      <h2>Script Results</h2>
+      <div class="results">
+        <div>...</div>
+      </div>
+      <iframe style="display: none;"></iframe>
+      <script src="/grocery-demo/assets/trigger.js"></script>
+    </body>
+    </html>
+    `;
+    res.send(out);
+  }
+  else {
+    res.send('not authorized');
+  }
 });
 
 app.get('/*', async (req, res) => {
