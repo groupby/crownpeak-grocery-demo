@@ -313,7 +313,7 @@ app.post('/autocomplete*', async (req, res) => {
     req.body.visitorId = req.cookies['gbi_visitorId'];
   }
 
-  let auto = await axios.get(`https://autocomplete.sandbox.groupbycloud.com/api/request?collection=${req.query.collection}&area=${req.query.area}&searchItems=${req.query.pageSize}&query=${req.query.q}`, options);
+  let auto = await axios.get(`https://autocomplete.sandbox.groupbycloud.com/api/request?collection=${req.query.collection}&area=${req.query.area}&searchItems=${req.query.pageSize}&query=${req.query.q.replace(/\#/g,'%23')}`, options);
   res.json(auto.data);
 });
 
