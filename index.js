@@ -263,6 +263,7 @@ app.get('/*', async (req, res) => {
       feed.on('data', async function(d) {
         buf += d;
       }).on('end', async function() {
+        let formattedPage = buf;
         if(req.url.indexOf('/recipe/') != -1) {
           let recUrlParts = req.url.split('/');
           if(recUrlParts.length > 2) {
