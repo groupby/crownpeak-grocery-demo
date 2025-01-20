@@ -60,6 +60,19 @@ app.post('/pdp-api*', async function(req, res) {
   res.json(pdp.data);
 });
 
+app.post('/recipe-api*', async function(req, res) {
+  let options = {
+    headers: {
+      'Authorization': 'client-key ' + process.env.CLIENT_KEY,
+      'Content-Type': 'application/json',
+      'X-Groupby-Customer-Id': 'demos',
+      'skip-cache': 'true'
+    }
+  };
+  let pdp = await axios.get('https://search.demos.groupbycloud.com/api/search/product?collection=content&productId=' + req.body.id, options);
+  res.json(pdp.data);
+});
+
 app.post('/save-recipe-terms', async (req, res) => {
   if(req.body.recipeId && req.body.searchTerms) {
     const bucket = storage.bucket(bucketName);
