@@ -246,6 +246,10 @@ app.post('/search-api*', async (req, res) => {
     req.body.visitorId = req.cookies['gbi_visitorId'];
   }
 
+  if(req.body.pageCategories) {
+    delete req.body.pageCategories;
+  }
+
   try {
     let search = await axios.post('https://search.sandbox.groupbycloud.com/api/search', req.body, options);
     res.json(search.data);
