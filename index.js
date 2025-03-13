@@ -19,9 +19,7 @@ require('dotenv').config();
 app.use(cors());
 app.use(bodyParser.json());
 
-const currentDemo = 'grocery-demo';
-
-app.use(favicon(__dirname + '/favicon-orgill.png'));
+app.use(favicon(__dirname + '/favicon.ico'));
 
 const {Storage} = require('@google-cloud/storage');
 var env = process.env.ENV;
@@ -153,7 +151,7 @@ app.use(function (req, res, next) {
 
 async function get404() {
   const bucket = storage.bucket(bucketName);
-  const file = bucket.file('poc-orgill/' + process.env.ENV + '/404.html');
+  const file = bucket.file('poc-indi/' + process.env.ENV + '/404.html');
 
   return new Promise((resolve, reject) => {
     let feed = file.createReadStream();
@@ -219,7 +217,7 @@ app.post('/pdp-api*', async function(req, res) {
     headers: {
       'Authorization': 'client-key ' + process.env.CLIENT_KEY,
       'Content-Type': 'application/json',
-      'X-Groupby-Customer-Id': 'orgill',
+      'X-Groupby-Customer-Id': 'indi',
       'skip-cache': 'true'
     }
   };
@@ -238,7 +236,7 @@ app.post('/search-api*', async (req, res) => {
     headers: {
       'Authorization': 'client-key ' + process.env.CLIENT_KEY,
       'Content-Type': 'application/json',
-      'X-Groupby-Customer-Id': 'orgill',
+      'X-Groupby-Customer-Id': 'indi',
       'skip-cache': 'true',
       'Access-Control-Allow-Origin' : '*'
     }
@@ -264,7 +262,7 @@ app.post('/facet*', async (req, res) => {
     headers: {
       'Authorization': 'client-key ' + process.env.CLIENT_KEY,
       'Content-Type': 'application/json',
-      'X-Groupby-Customer-Id': 'orgill'
+      'X-Groupby-Customer-Id': 'indi'
     }
   };
 
@@ -281,7 +279,7 @@ app.post('/recs*', async (req, res) => {
     headers: {
       'Authorization': 'client-key ' + process.env.CLIENT_KEY,
       'Content-Type': 'application/json',
-      'X-Groupby-Customer-Id': 'orgill'
+      'X-Groupby-Customer-Id': 'indi'
     }
   };
 
@@ -305,7 +303,7 @@ app.post('/autocomplete*', async (req, res) => {
       'Authorization': 'client-key ' + process.env.CLIENT_KEY,
       'Content-Type': 'application/json',
       'accept': 'application/json',
-      'X-Groupby-Customer-Id': 'orgill'
+      'X-Groupby-Customer-Id': 'indi'
     }
   };
 
@@ -326,11 +324,11 @@ app.get('/grocery-demo/grocery-demo/assets/*', function(req, res) {
 
   const bucket = storage.bucket(bucketName);
   let urlPath = filePath.split('/');
-  const file = bucket.file('poc-orgill/' + process.env.ENV + filePath.split('?')[0]);
+  const file = bucket.file('poc-indi/' + process.env.ENV + filePath.split('?')[0]);
 
   file.exists(function(err,exists) {
     if(!exists) {
-      res.send('error 404 - ' + 'poc-orgill/' + process.env.ENV + filePath.split('?')[0]);
+      res.send('error 404 - ' + 'poc-indi/' + process.env.ENV + filePath.split('?')[0]);
     }
     else {
       let parts = filePath.split('.');
@@ -392,7 +390,7 @@ async function getGlbChunk(file, start, end) {
 app.post('/save-pp', async function(req, res) {
   if(req.body.user && req.body.pp) {
     const bucket = storage.bucket(bucketName);
-    const file = 'poc-orgill/' + process.env.ENV + '/past-purchases/' + req.body.user + '.json';
+    const file = 'poc-indi/' + process.env.ENV + '/past-purchases/' + req.body.user + '.json';
 
     const readableStream = new Readable();
     readableStream.push(JSON.stringify(req.body.pp));
@@ -425,7 +423,7 @@ app.post('/save-pp', async function(req, res) {
 app.post('/get-pps', async function(req, res) {
   if(req.body.user) {
     const bucket = storage.bucket(bucketName);
-    const file = bucket.file('poc-orgill/' + process.env.ENV + '/past-purchases/' + req.body.user + '.json');
+    const file = bucket.file('poc-indi/' + process.env.ENV + '/past-purchases/' + req.body.user + '.json');
 
     file.exists(async function(err,exists) {
       if(!exists) {
@@ -470,11 +468,11 @@ app.get('/images/*', function(req, res) {
 
   const bucket = storage.bucket(bucketName);
   let urlPath = filePath.split('/');
-  const file = bucket.file('poc-orgill/' + process.env.ENV + filePath.split('?')[0]);
+  const file = bucket.file('poc-indi/' + process.env.ENV + filePath.split('?')[0]);
 
   file.exists(async function(err,exists) {
     if(!exists) {
-      res.send('error 404 - ' + 'poc-orgill/' + process.env.ENV + filePath.split('?')[0]);
+      res.send('error 404 - ' + 'poc-indi/' + process.env.ENV + filePath.split('?')[0]);
     }
     else {
       let parts = filePath.split('.');
@@ -520,11 +518,11 @@ app.get('/assets/*', function(req, res) {
 
   const bucket = storage.bucket(bucketName);
   let urlPath = filePath.split('/');
-  const file = bucket.file('poc-orgill/' + process.env.ENV + filePath.split('?')[0]);
+  const file = bucket.file('poc-indi/' + process.env.ENV + filePath.split('?')[0]);
 
   file.exists(async function(err,exists) {
     if(!exists) {
-      res.send('error 404 - ' + 'poc-orgill/' + process.env.ENV + filePath.split('?')[0]);
+      res.send('error 404 - ' + 'poc-indi/' + process.env.ENV + filePath.split('?')[0]);
     }
     else {
       let parts = filePath.split('.');
@@ -571,69 +569,12 @@ app.get('/assets/*', function(req, res) {
 
 });
 
-app.get('/dev/' + currentDemo + '/*', (req, res) => {
-  res.redirect(req.url.replace('/dev',''));
-});
-
-app.get('/live/' + currentDemo + '/*', (req, res) => {
-  res.redirect(req.url.replace('/live',''));
-});
-
-app.get('/recipes-index.json', (req, res) => {
-  if(req.get('host').indexOf('groupby.cloud') == -1) {
-    // env = 'dev';
-  }
-
-  const bucket = storage.bucket(bucketName);
-  let urlPath = req.url.split('/');
-  const file = bucket.file('poc-orgill/' + process.env.ENV + req.url.split('?')[0]);
-
-  file.exists(function(err,exists) {
-    if(!exists) {
-      res.send('error 404 - ' + 'poc-orgill/' + process.env.ENV + filePath.split('?')[0]);
-    }
-    else {
-      let feed = file.createReadStream();
-      var buf = '';
-      feed.on('data', function(d) {
-        buf += d;
-      }).on('end', function() {
-        res.send(buf);
-      })
-    }
-  });
-});
-
-app.get('/trigger', async (req, res) => {
-  if(triggerOK) {
-    let out = `<!doctype html>
-    <html>
-    <head>
-      <title>Trigger Script - Orgill POC</title>
-    </head>
-    <body>
-      <h2>Script Results</h2>
-      <div class="results">
-        <div>...</div>
-      </div>
-      <iframe style="display: none;"></iframe>
-      <script src="/assets/trigger.js"></script>
-    </body>
-    </html>
-    `;
-    res.send(out);
-  }
-  else {
-    res.send('not authorized');
-  }
-});
-
 app.get('/*', async (req, res) => {
   if(req.get('host').indexOf('groupby.cloud') == -1) {
     // env = 'dev';
   }
   const bucket = storage.bucket(bucketName);
-  const file = bucket.file('poc-orgill/' + process.env.ENV + '/homepage.html');
+  const file = bucket.file('poc-indi/' + process.env.ENV + '/homepage.html');
 
   file.exists(function(err,exists) {
     if(!exists) {
@@ -645,62 +586,33 @@ app.get('/*', async (req, res) => {
       feed.on('data', async function(d) {
         buf += d;
       }).on('end', async function() {
-        buf = buf.replace('tile-img|[{image}]','tile-img|[{images.0.uri}]').replace('mini-cart-image|[{image}]','mini-cart-image|[{images.0.uri}]').replace('mini-cart-price|{price}','mini-cart-price|{priceInfo.price}').replace('product-card-price|{price,2}','product-card-price|{priceInfo.price,2}')
-        let regex = new RegExp('/' + currentDemo + '/','g');
-        var formattedPage = buf.replace(/\/dev\//g,'\/').replace(/\/live\//g,'\/').replace(regex,'/');
+        var formattedPage = buf;
 
-        if(req.url.indexOf('/recipe/') != -1) {
-          let recUrlParts = req.url.split('/');
-          if(recUrlParts.length > 2) {
-            let recipeId = recUrlParts[recUrlParts.length - 2];
-            const file2 = bucket.file('poc-orgill/' + process.env.ENV + '/recipe-terms/' + recipeId + '.json');
-            file2.exists(function(err,exists2) {
-              if(!exists2) {
-                res.send(formattedPage);
-              }
-              else {
-                let feed2 = file2.createReadStream();
-                var buf2 = '';
-                feed2.on('data', async function(d) {
-                  buf2 += d;
-                }).on('end', async function() {
-                  formattedPage = formattedPage.replace('<header>',('<div class="invisible recipe-search-terms">' + buf2 + '</div><header>'));
-
-                  res.send(formattedPage);
-                });
-              }
-            });
+        // insert category/mm:
+        let megaOptions = {
+          headers: {
+            'Authorization': 'client-key ' + process.env.CLIENT_KEY,
+            'Content-Type': 'application/json',
+            'X-Groupby-Customer-Id': 'indi',
+            'skip-cache': 'true'
           }
-
+        };
+        try {
+          // let megaData = await axios.get(`https://cm.sandbox.groupbycloud.com/api/megamenus/demo-megamenu/categories`, megaOptions);
+          //
+          // let visualData = await axios.get(`https://cm.sandbox.groupbycloud.com/api/megamenus/demo-visualmenu/categories`, megaOptions);
+          //
+          // let addedCode = `<div class="megamenu-data invisible">${JSON.stringify(megaData.data)}</div><div class="visualmenu-data invisible">${JSON.stringify(visualData.data)}</div>`;
+let addedCode = '';
+          formattedPage = formattedPage.replace('</body>',`${addedCode}</body>`);
+        }catch(e) {
+          // do nothing
         }
-        else {
-          // insert category/mm:
-          let megaOptions = {
-            headers: {
-              'Authorization': 'client-key ' + process.env.CLIENT_KEY,
-              'Content-Type': 'application/json',
-              'X-Groupby-Customer-Id': 'orgill',
-              'skip-cache': 'true'
-            }
-          };
-          try {
-            let megaData = await axios.get(`https://cm.sandbox.groupbycloud.com/api/megamenus/demo-megamenu/categories`, megaOptions);
 
-            let visualData = await axios.get(`https://cm.sandbox.groupbycloud.com/api/megamenus/demo-visualmenu/categories`, megaOptions);
-
-            let addedCode = `<div class="megamenu-data invisible">${JSON.stringify(megaData.data)}</div><div class="visualmenu-data invisible">${JSON.stringify(visualData.data)}</div>`;
-
-            formattedPage = formattedPage.replace('</body>',`${addedCode}</body>`);
-          }catch(e) {
-            // do nothing
-          }
-
-          res.send(formattedPage);
-        }
+        res.send(formattedPage);
       })
     }
   });
-  // res.send('testing...');
 });
 
 app.listen(port, () => {
