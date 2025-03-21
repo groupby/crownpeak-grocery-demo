@@ -604,10 +604,10 @@ app.get('/*', async (req, res) => {
         try {
           // let megaData = await axios.get(`https://cm.sandbox.groupbycloud.com/api/megamenus/demo-megamenu/categories`, megaOptions);
           //
-          // let visualData = await axios.get(`https://cm.sandbox.groupbycloud.com/api/megamenus/demo-visualmenu/categories`, megaOptions);
-          //
-          // let addedCode = `<div class="megamenu-data invisible">${JSON.stringify(megaData.data)}</div><div class="visualmenu-data invisible">${JSON.stringify(visualData.data)}</div>`;
-let addedCode = '';
+          let visualData = await axios.get(`https://cm.sandbox.groupbycloud.com/api/megamenus/visualCategories/categories`, megaOptions);
+
+          let addedCode = `<div class="visualmenu-data invisible">${JSON.stringify(visualData.data)}</div>`;
+
           formattedPage = formattedPage.replace('</body>',`${addedCode}</body>`);
         }catch(e) {
           // do nothing
