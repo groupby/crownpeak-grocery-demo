@@ -606,7 +606,9 @@ app.get('/*', async (req, res) => {
           //
           let visualData = await axios.get(`https://cm.sandbox.groupbycloud.com/api/megamenus/visualCategories/categories`, megaOptions);
 
-          let addedCode = `<div class="visualmenu-data invisible">${JSON.stringify(visualData.data)}</div>`;
+          let brandData = await axios.get(`https://cm.sandbox.groupbycloud.com/api/megamenus/visualBrands/categories`, megaOptions);
+
+          let addedCode = `<div class="visualmenu-data invisible">${JSON.stringify(visualData.data)}</div><div class="brandsmenu-data invisible">${JSON.stringify(brandData.data)}</div>`;
 
           formattedPage = formattedPage.replace('</body>',`${addedCode}</body>`);
         }catch(e) {
