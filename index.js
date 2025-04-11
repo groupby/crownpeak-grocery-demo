@@ -311,11 +311,7 @@ app.post('/autocomplete*', async (req, res) => {
     }
   };
 
-  if(req.cookies && req.cookies['gbi_visitorId']) {
-    req.body.visitorId = req.cookies['gbi_visitorId'];
-  }
-
-  let auto = await axios.get(`https://autocomplete.sandbox.groupbycloud.com/api/request?collection=${req.query.collection}&area=${req.query.area}&searchItems=${req.query.pageSize}&query=${req.query.q.replace(/\#/g,'%23')}`, options);
+  let auto = await axios.get(`https://autocomplete.sandbox.groupbycloud.com/api/request?collection=${req.query.collection}&area=${req.query.area}&searchItems=5&query=${req.query.q}&extendedAttributes=partNumbers&debug=false&extendedSuggestions=true`, options);
   res.json(auto.data);
 });
 
