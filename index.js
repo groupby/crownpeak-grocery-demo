@@ -11,8 +11,6 @@ app.use(cookieParser());
 const Readable = require('stream').Readable;
 const {Translate} = require('@google-cloud/translate').v2;
 const translate = new Translate();
-const multer = require('multer');
-const upload = multer();
 
 require('dotenv').config();
 
