@@ -148,7 +148,7 @@ app.use(function (req, res, next) {
 
 async function get404() {
   const bucket = storage.bucket(bucketName);
-  const file = bucket.file('lacomer-poc/' + process.env.ENV + '/404.html');
+  const file = bucket.file('liverpool-enrich/' + process.env.ENV + '/404.html');
 
   return new Promise((resolve, reject) => {
     let feed = file.createReadStream();
@@ -327,11 +327,11 @@ app.get('/grocery-demo/grocery-demo/assets/*', function(req, res) {
 
   const bucket = storage.bucket(bucketName);
   let urlPath = filePath.split('/');
-  const file = bucket.file('lacomer-poc/' + process.env.ENV + filePath.split('?')[0]);
+  const file = bucket.file('liverpool-enrich/' + process.env.ENV + filePath.split('?')[0]);
 
   file.exists(function(err,exists) {
     if(!exists) {
-      res.send('error 404 - ' + 'lacomer-poc/' + process.env.ENV + filePath.split('?')[0]);
+      res.send('error 404 - ' + 'liverpool-enrich/' + process.env.ENV + filePath.split('?')[0]);
     }
     else {
       let parts = filePath.split('.');
@@ -393,7 +393,7 @@ async function getGlbChunk(file, start, end) {
 app.post('/save-pp', async function(req, res) {
   if(req.body.user && req.body.pp) {
     const bucket = storage.bucket(bucketName);
-    const file = 'lacomer-poc/' + process.env.ENV + '/past-purchases/' + req.body.user + '.json';
+    const file = 'liverpool-enrich/' + process.env.ENV + '/past-purchases/' + req.body.user + '.json';
 
     const readableStream = new Readable();
     readableStream.push(JSON.stringify(req.body.pp));
@@ -426,7 +426,7 @@ app.post('/save-pp', async function(req, res) {
 app.post('/get-pps', async function(req, res) {
   if(req.body.user) {
     const bucket = storage.bucket(bucketName);
-    const file = bucket.file('lacomer-poc/' + process.env.ENV + '/past-purchases/' + req.body.user + '.json');
+    const file = bucket.file('liverpool-enrich/' + process.env.ENV + '/past-purchases/' + req.body.user + '.json');
 
     file.exists(async function(err,exists) {
       if(!exists) {
@@ -471,11 +471,11 @@ app.get('/images/*', function(req, res) {
 
   const bucket = storage.bucket(bucketName);
   let urlPath = filePath.split('/');
-  const file = bucket.file('lacomer-poc/' + process.env.ENV + filePath.split('?')[0]);
+  const file = bucket.file('liverpool-enrich/' + process.env.ENV + filePath.split('?')[0]);
 
   file.exists(async function(err,exists) {
     if(!exists) {
-      res.send('error 404 - ' + 'lacomer-poc/' + process.env.ENV + filePath.split('?')[0]);
+      res.send('error 404 - ' + 'liverpool-enrich/' + process.env.ENV + filePath.split('?')[0]);
     }
     else {
       let parts = filePath.split('.');
@@ -521,11 +521,11 @@ app.get('/assets/*', function(req, res) {
 
   const bucket = storage.bucket(bucketName);
   let urlPath = filePath.split('/');
-  const file = bucket.file('lacomer-poc/' + process.env.ENV + filePath.split('?')[0]);
+  const file = bucket.file('liverpool-enrich/' + process.env.ENV + filePath.split('?')[0]);
 
   file.exists(async function(err,exists) {
     if(!exists) {
-      res.send('error 404 - ' + 'lacomer-poc/' + process.env.ENV + filePath.split('?')[0]);
+      res.send('error 404 - ' + 'liverpool-enrich/' + process.env.ENV + filePath.split('?')[0]);
     }
     else {
       let parts = filePath.split('.');
@@ -587,11 +587,11 @@ app.get('/recipes-index.json', (req, res) => {
 
   const bucket = storage.bucket(bucketName);
   let urlPath = req.url.split('/');
-  const file = bucket.file('lacomer-poc/' + process.env.ENV + req.url.split('?')[0]);
+  const file = bucket.file('liverpool-enrich/' + process.env.ENV + req.url.split('?')[0]);
 
   file.exists(function(err,exists) {
     if(!exists) {
-      res.send('error 404 - ' + 'lacomer-poc/' + process.env.ENV + filePath.split('?')[0]);
+      res.send('error 404 - ' + 'liverpool-enrich/' + process.env.ENV + filePath.split('?')[0]);
     }
     else {
       let feed = file.createReadStream();
@@ -610,7 +610,7 @@ app.get('/*', async (req, res) => {
     // env = 'dev';
   }
   const bucket = storage.bucket(bucketName);
-  const file = bucket.file('lacomer-poc/' + process.env.ENV + '/homepage.html');
+  const file = bucket.file('liverpool-enrich/' + process.env.ENV + '/homepage.html');
 
   file.exists(function(err,exists) {
     if(!exists) {
@@ -630,7 +630,7 @@ app.get('/*', async (req, res) => {
           let recUrlParts = req.url.split('/');
           if(recUrlParts.length > 2) {
             let recipeId = recUrlParts[recUrlParts.length - 2];
-            const file2 = bucket.file('lacomer-poc/' + process.env.ENV + '/recipe-terms/' + recipeId + '.json');
+            const file2 = bucket.file('liverpool-enrich/' + process.env.ENV + '/recipe-terms/' + recipeId + '.json');
             file2.exists(function(err,exists2) {
               if(!exists2) {
                 res.send(formattedPage);
