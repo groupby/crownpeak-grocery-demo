@@ -108,7 +108,7 @@ app.use(function (req, res, next) {
             </style>
           </head>
           <body>
-            <div><img src="https://www.groupbyinc.com/media-library/groupby-horizontal-dark.png" /></div>
+            <div><img src="https://rezolve.com/wp-content/uploads/2025/02/rezolve-ai-logo.svg" /></div>
             <div>You are not authorized to view this site.</div>
             <div>If you require access to this demo,</div>
             <div>you may <a href="mailto:presales@groupbyinc.com">contact PreSales</a> to request it.</div>
