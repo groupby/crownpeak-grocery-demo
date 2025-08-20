@@ -214,12 +214,12 @@ app.post('/pdp-api*', async function(req, res) {
     headers: {
       'Authorization': 'client-key ' + process.env.CLIENT_KEY,
       'Content-Type': 'application/json',
-      'X-Groupby-Customer-Id': 'lacomer',
+      'X-Groupby-Customer-Id': 'liverpool',
       'skip-cache': 'true'
     }
   };
   try {
-    let pdp = await axios.get('https://search.lacomer.groupbycloud.com/api/search/product?collection=Production&productId=' + req.body.id, options);
+    let pdp = await axios.get('https://search.liverpool.groupbycloud.com/api/search/product?collection=Production&productId=' + req.body.id, options);
     res.json(pdp.data);
   }catch(e) {
     res.json({
@@ -233,7 +233,7 @@ app.post('/search-api*', async (req, res) => {
     headers: {
       'Authorization': 'client-key ' + process.env.CLIENT_KEY,
       'Content-Type': 'application/json',
-      'X-Groupby-Customer-Id': 'lacomer',
+      'X-Groupby-Customer-Id': 'liverpool',
       'skip-cache': 'true',
       'Access-Control-Allow-Origin' : '*'
     }
@@ -244,7 +244,7 @@ app.post('/search-api*', async (req, res) => {
   }
 
   try {
-    let search = await axios.post('https://search.lacomer.groupbycloud.com/api/search', req.body, options);
+    let search = await axios.post('https://search.liverpool.groupbycloud.com/api/search', req.body, options);
     res.json(search.data);
   }catch(e) {
     res.json({
