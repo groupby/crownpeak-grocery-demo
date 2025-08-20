@@ -21,7 +21,7 @@ app.use(bodyParser.json());
 
 const currentDemo = 'grocery-demo';
 
-app.use(favicon(__dirname + '/favicon-lacomer.png'));
+app.use(favicon(__dirname + '/favicon-liverpool.ico'));
 
 const {Storage} = require('@google-cloud/storage');
 var env = process.env.ENV;
