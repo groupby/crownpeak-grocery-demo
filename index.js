@@ -219,7 +219,7 @@ app.post('/pdp-api*', async function(req, res) {
     }
   };
   try {
-    let pdp = await axios.get('https://search.liverpool.groupbycloud.com/api/search/product?collection=Production&productId=' + req.body.id, options);
+    let pdp = await axios.get('https://search.liverpool.groupbycloud.com/api/search/product?collection=' + req.body.collection + '&productId=' + req.body.id, options);
     res.json(pdp.data);
   }catch(e) {
     res.json({
