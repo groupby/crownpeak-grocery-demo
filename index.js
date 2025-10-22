@@ -219,7 +219,7 @@ app.post('/pdp-api*', async function(req, res) {
     }
   };
   try {
-    let prod = req.body.id.split('~');
+    let prod = req.body.id.split('.');
     let prodId = prod[0];
     let variant = '';
     if(prod.length > 1) {
