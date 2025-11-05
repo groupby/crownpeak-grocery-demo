@@ -12,7 +12,7 @@ var env = process.env.ENV;
 const storage = new Storage('groupby-demos',process.env.GOOGLE_STORAGE);
 const bucketName = 'demos_content';
 
-app.get('/{*any}', function(req, res) {
+app.get('/*', function(req, res) {
   let filePath = req.url;
 
   const bucket = storage.bucket(bucketName);
@@ -56,10 +56,6 @@ app.get('/{*any}', function(req, res) {
       }
     }
   });
-});
-
-app.get('/', function(req, res) {
-  res.status(404).send('file not found');
 });
 
 app.listen(port, () => {
