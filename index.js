@@ -37,13 +37,14 @@ app.get('/*', function(req, res) {
         'jpeg',
         'svg',
         'gif',
-        'webp'
+        'webp',
+        'tif'
       ];
       if(imgExts.indexOf(ext) != -1) {
         let filePath = req.url.split('/');
         file.getMetadata().then(function(data) {
           res.writeHead(200, {
-              "Content-Type": `image/${ext.replace('svg','svg+xml').replace('jpg','jpeg')}`,
+              "Content-Type": `image/${ext.replace('svg','svg+xml').replace('jpg','jpeg').replace('tif','tiff')}`,
               "Content-Disposition": "attachment; filename=" + filePath[filePath.length - 1],
               "Content-Length": data[0].size,
               "Content-Transfer-Encoding": "binary"
