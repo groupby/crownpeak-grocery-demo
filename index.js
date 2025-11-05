@@ -58,6 +58,10 @@ app.get('/{*any}', function(req, res) {
   });
 });
 
+app.get('/', function(req, res) {
+  res.status(404).send('file not found');
+});
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}!`)
 });
