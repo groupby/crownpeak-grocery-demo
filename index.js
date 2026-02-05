@@ -129,7 +129,7 @@ app.use(function (req, res, next) {
       else {
         try {
           let decoded = JSON.parse(Buffer.from(req.cookies.appAuth.split('.')[1], 'base64').toString());
-          console.log('checking', process.env.AUTH0_PERMS);
+          // console.log('checking', process.env.AUTH0_PERMS);
           if(decoded.email && decoded.email == 'presales@gmail.com') {
             triggerOK = true;
           }
