@@ -25,6 +25,127 @@ var env = 'live';
 const storage = new Storage('groupby-demos',process.env.GOOGLE_STORAGE);
 const bucketName = 'demos_content';
 
+
+app.use(function (req, res, next) {
+  if(req.query.code) {
+    var options = {
+      method: 'POST',
+      url: 'https://groupbycloud.us.auth0.com/oauth/token',
+      headers: {'content-type': 'application/x-www-form-urlencoded'},
+      data: new URLSearchParams({
+        grant_type: 'authorization_code',
+        client_id: process.env.AUTH0_CLIENT,
+        client_secret: process.env.AUTH0_SECRET,
+        code: req.query.code,
+        redirect_uri: `https://${req.get('host')}/callback`
+      })
+    };
+
+    axios.request(options).then(function (response) {
+      console.log('verifying',response.data);
+      let decodedat = JSON.parse(Buffer.from(response.data.access_token.split('.')[1], 'base64').toString());
+      console.log('decoded', decodedat);
+      res.cookie('appAuth', response.data.access_token, { maxAge: 1000*60*60*24*30, httpOnly: true });
+      if(req.cookies.currentPg && req.cookies.currentPg != '') {
+        let gotoPg = req.cookies.currentPg;
+        res.cookie('currentPg','', { maxAge: 1, httpOnly: true });
+        res.redirect(gotoPg);
+      }
+      else {
+        res.redirect('/');
+      }
+    }).catch(function (error) {
+      // console.error(error);
+      res.send('error - unable to load page');
+    });
+  }
+  else {
+    if(req.url == '/not-authorized') {
+      if(req.cookies.appAuth) {
+        // fully logout:
+        let currentAuth = req.cookies.appAuth;
+
+        let decodedsid = JSON.parse(Buffer.from(req.cookies.appAuth.split('.')[1], 'base64').toString());
+        let sid = decodedsid.sub.replace('auth0|','');
+        // res.json({
+        //   'finding-sid': decodedsid
+        // });
+
+        res.cookie('appAuth', '', { maxAge: -1, httpOnly: true });
+        let url = `https://groupbycloud.us.auth0.com/oidc/logout?logout_hint=${sid}&post_logout_redirect_uri=https://${req.get('host')}/not-authorized`;
+        res.redirect(url);
+      }
+      else {
+        res.send(`<!doctype html>
+          <html>
+          <head>
+            <style type="text/css">
+            html,body {
+              height: 100%;
+            }
+            * {
+              box-sizing: border-box;
+            }
+            body {
+              margin: 0;
+              display: flex;
+              flex-direction: column;
+              justify-content: center;
+              align-items: center;
+              text-align: center;
+            }
+            div {
+              margin: .5rem 0;
+              font-size: 1.25rem;
+            }
+            img {
+              height: 3rem;
+              width: auto;
+            }
+            </style>
+          </head>
+          <body>
+            <div><img src="https://rezolve.com/wp-content/uploads/2025/07/rezolve-logo-12-2025.svg" /></div>
+            <div>You are not authorized to view this site.</div>
+            <div>If you require access to this demo,</div>
+            <div>you may <a href="mailto:presales@rezolve.com">contact PreSales</a> to request it.</div>
+            <div>&nbsp;</div>
+            <div><a href="/">Click here to try again</a></div>
+          </body>
+          </html>`
+        );
+      }
+    }
+    else {
+      if(!req.cookies.appAuth) {
+        res.cookie('currentPg',decodeURIComponent(req.url), { maxAge: 1000*60*5, httpOnly: true });
+        res.redirect(`https://groupbycloud.us.auth0.com/authorize?response_type=code&client_id=${process.env.AUTH0_CLIENT}&redirect_uri=https://${req.get('host')}/callback&scope=openid profile email ${process.env.AUTH0_PERMS}&audience=https://presales-demos-api&state=test`);
+      }
+      else {
+        try {
+          let decoded = JSON.parse(Buffer.from(req.cookies.appAuth.split('.')[1], 'base64').toString());
+          // console.log('checking', process.env.AUTH0_PERMS);
+          if(decoded.email && decoded.email == 'presales@gmail.com') {
+            triggerOK = true;
+          }
+          if(decoded.email.indexOf('@groupbyinc.com') != -1 || decoded.email.indexOf('@rezolve.com') != -1 || decoded.permissions.indexOf(process.env.AUTH0_PERMS) != -1) {
+            // login OK
+            next();
+          }
+          else {
+            // res.cookie('appAuth', '', { maxAge: -1, httpOnly: true });
+            res.redirect('/not-authorized');
+          }
+        }
+        catch (err) {
+          // res.cookie('appAuth', '', { maxAge: -1, httpOnly: true });
+          res.redirect('/not-authorized');
+        }
+      }
+    }
+  }
+});
+
 async function get404() {
   const bucket = storage.bucket(bucketName);
   const file = bucket.file('demos-5fg5Xq2wWTzhrKKu/' + env + '/' + currentDemo + '/404.html');
