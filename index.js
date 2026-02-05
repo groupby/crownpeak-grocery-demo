@@ -143,7 +143,7 @@ app.post('/search-api*', async (req, res) => {
 });
 
 app.get('/grocery-demo/grocery-demo/assets/*', function(req, res) {
-  if(req.get('host').indexOf('groupby.cloud') == -1) {
+  if(req.get('host').indexOf('groupby.cloud') == -1 || req.get('host').indexOf('rezolve.cloud') == -1) {
     env = 'dev';
   }
 
@@ -291,7 +291,7 @@ app.post('/get-pps', async function(req, res) {
 });
 
 app.get('/assets/*', function(req, res) {
-  if(req.get('host').indexOf('groupby.cloud') == -1) {
+  if(req.get('host').indexOf('groupby.cloud') == -1 || req.get('host').indexOf('rezolve.cloud') == -1) {
     env = 'dev';
   }
 
