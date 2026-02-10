@@ -25,6 +25,25 @@ var env = 'live';
 const storage = new Storage('groupby-demos',process.env.GOOGLE_STORAGE);
 const bucketName = 'demos_content';
 
+// search endpoint outside of auth0 for housewares script
+app.post('/search-api*', async (req, res) => {
+  let options = {
+    headers: {
+      'Authorization': 'client-key ' + process.env.CLIENT_KEY,
+      'Content-Type': 'application/json',
+      'X-Groupby-Customer-Id': 'demos',
+      'skip-cache': 'true',
+      'Access-Control-Allow-Origin' : '*'
+    }
+  };
+
+  if(req.cookies && req.cookies['gbi_visitorId']) {
+    req.body.visitorId = req.cookies['gbi_visitorId'];
+  }
+
+  let search = await axios.post('https://search.demos.groupbycloud.com/api/search', req.body, options);
+  res.json(search.data);
+});
 
 app.use(function (req, res, next) {
   if(req.query.code) {
@@ -243,25 +262,6 @@ app.post('/save-recipe-terms', async (req, res) => {
       error: 'invalid payload'
     })
   }
-});
-
-app.post('/search-api*', async (req, res) => {
-  let options = {
-    headers: {
-      'Authorization': 'client-key ' + process.env.CLIENT_KEY,
-      'Content-Type': 'application/json',
-      'X-Groupby-Customer-Id': 'demos',
-      'skip-cache': 'true',
-      'Access-Control-Allow-Origin' : '*'
-    }
-  };
-
-  if(req.cookies && req.cookies['gbi_visitorId']) {
-    req.body.visitorId = req.cookies['gbi_visitorId'];
-  }
-
-  let search = await axios.post('https://search.demos.groupbycloud.com/api/search', req.body, options);
-  res.json(search.data);
 });
 
 app.get('/grocery-demo/grocery-demo/assets/*', function(req, res) {
