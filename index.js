@@ -148,7 +148,7 @@ app.use(function (req, res, next) {
             triggerOK = true;
           }
           // if(decoded.email.indexOf('@groupbyinc.com') != -1 || decoded.email.indexOf('@rezolve.com') != -1 || decoded.permissions.indexOf(process.env.AUTH0_PERMS) != -1) {
-          if(decoded.email == 'yanishjutton@rezolve.com' || decoded.email == 'danielpeltier@rezolve.com') {
+          if(decoded.email == 'yanishjutton@rezolve.com' || decoded.email == 'danielpeltier@rezolve.com' || decoded.email.toLowerCase() == 'arturtuchowski@rezolve.com') {
             // login OK
             next();
           }
