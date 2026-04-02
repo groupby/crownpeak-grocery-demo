@@ -128,7 +128,7 @@ app.use(function (req, res, next) {
         try {
           let decoded = JSON.parse(Buffer.from(req.cookies.appAuth.split('.')[1], 'base64').toString());
           console.log('checking', process.env.AUTH0_PERMS);
-          if(decoded.email.indexOf('@groupbyinc.com') != -1 || decoded.permissions.indexOf(process.env.AUTH0_PERMS) != -1) {
+          if(decoded.email.indexOf('@rezolve.com') != -1 || decoded.permissions.indexOf(process.env.AUTH0_PERMS) != -1) {
             // login OK
             next();
           }
